@@ -8,9 +8,7 @@ import vercel from '@astrojs/vercel';
 export default defineConfig({
   site: 'https://flyaustria.in',
   output: 'static',
-  adapter: vercel({
-    runtime: 'nodejs20.x'
-  }),
+  adapter: vercel(),
   integrations: [
     mdx(),
     sitemap(),
