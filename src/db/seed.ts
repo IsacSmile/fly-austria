@@ -1,4 +1,4 @@
-import { db, admins, enquiries, universities, faqs, services, blogPosts, settings, consultations } from './index';
+import { db, admins, enquiries, universities, testimonials, faqs, services, blogPosts, settings, consultations } from './index';
 import { hashPassword } from '../lib/adminAuth';
 
 async function seed() {
@@ -244,10 +244,152 @@ async function seed() {
     { id: 'set_05', key: 'trust_students_count', value: '450+', updatedAt: now }
   ];
 
-  for (const set of sampleSettings) {
-    await db.insert(settings).values(set).onConflictDoNothing().catch(() => {});
+  // 7. Seed Universities
+  const sampleUniversities = [
+    {
+      id: 'uni_01',
+      name: 'University of Vienna',
+      germanName: 'Universität Wien',
+      city: 'Vienna',
+      tuitionFee: '€726.72 / semester',
+      ranking: '#1 in Austria • World Top 130',
+      popularCourses: 'Computer Science, Data Science, Molecular Biology, Economics',
+      imageUrl: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&auto=format&fit=crop&q=80',
+      websiteUrl: 'https://www.univie.ac.at',
+      description: 'Founded in 1365, one of Europe\'s oldest and most prestigious research public universities with top English-taught Master\'s degrees.',
+      isFeatured: 1,
+      displayOrder: 1,
+    },
+    {
+      id: 'uni_02',
+      name: 'TU Graz (Graz University of Technology)',
+      germanName: 'Technische Universität Graz',
+      city: 'Graz',
+      tuitionFee: '€726.72 / semester',
+      ranking: '#1 Engineering Tech Uni in Austria',
+      popularCourses: 'Software Engineering, Computer Science, Automotive Engineering, Biomedical Engineering',
+      imageUrl: 'https://images.unsplash.com/photo-1562774053-701939374585?w=800&auto=format&fit=crop&q=80',
+      websiteUrl: 'https://www.tugraz.at',
+      description: 'Austria\'s premier technical university known for world-class AI, Robotics, and Computer Science research with direct industry links.',
+      isFeatured: 1,
+      displayOrder: 2,
+    },
+    {
+      id: 'uni_03',
+      name: 'TU Wien (Vienna University of Technology)',
+      germanName: 'Technische Universität Wien',
+      city: 'Vienna',
+      tuitionFee: '€726.72 / semester',
+      ranking: 'World Top 180 Engineering',
+      popularCourses: 'Data Science, Embedded Systems, Architecture, Mechanical Engineering',
+      imageUrl: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&auto=format&fit=crop&q=80',
+      websiteUrl: 'https://www.tuwien.at',
+      description: 'Located in the heart of Vienna, TU Wien combines high-tech innovation with affordable public European tuition.',
+      isFeatured: 1,
+      displayOrder: 3,
+    },
+    {
+      id: 'uni_04',
+      name: 'JKU Linz (Johannes Kepler University)',
+      germanName: 'Johannes Kepler Universität Linz',
+      city: 'Linz',
+      tuitionFee: '€726.72 / semester',
+      ranking: 'Top Innovation Hub',
+      popularCourses: 'Artificial Intelligence, Business Informatics, Management',
+      imageUrl: 'https://images.unsplash.com/photo-1592285850223-87ee1427fefb?w=800&auto=format&fit=crop&q=80',
+      websiteUrl: 'https://www.jku.at',
+      description: 'Pioneer of Artificial Intelligence degree programs in Europe with modern campus facilities and industry internships.',
+      isFeatured: 1,
+      displayOrder: 4,
+    }
+  ];
+
+  for (const uni of sampleUniversities) {
+    await db.insert(universities).values(uni).onConflictDoNothing().catch(() => {});
   }
-  console.log(`✅ Global Settings Seeded.`);
+  console.log(`✅ Sample Universities Seeded.`);
+
+  // 8. Seed Testimonials
+  const sampleTestimonials = [
+    {
+      id: 'test_01',
+      studentName: 'Arjun S. Nair',
+      homeCity: 'Kochi, Kerala',
+      universityName: 'TU Graz',
+      course: 'M.Sc. Computer Science',
+      graduationYear: '2026 Batch',
+      quote: 'FlyAustria handled my MEA apostille, university admission at TU Graz, and OEAD dorm booking smoothly from Kochi. Zero blocked account headache!',
+      imageUrl: '/images/students/arjun.png',
+      visaApprovedDate: 'July 2025',
+      rating: 5,
+    },
+    {
+      id: 'test_02',
+      studentName: 'Pooja Menon',
+      homeCity: 'Trivandrum, Kerala',
+      universityName: 'University of Vienna',
+      course: 'M.Sc. Molecular Biology',
+      graduationYear: '2026 Batch',
+      quote: 'The team guided my Medium of Instruction certificate verification with Uni Vienna. Tuition is just €726/sem and Vienna is super safe for female students.',
+      imageUrl: '/images/students/pooja.png',
+      visaApprovedDate: 'August 2025',
+      rating: 5,
+    }
+  ];
+
+  for (const test of sampleTestimonials) {
+    await db.insert(testimonials).values(test).onConflictDoNothing().catch(() => {});
+  }
+  console.log(`✅ Sample Testimonials Seeded.`);
+
+  // 9. Seed FAQs
+  const sampleFaqs = [
+    {
+      id: 'faq_01',
+      category: 'Tuition & Fees',
+      question: 'Are public universities in Austria really free or €726 per semester?',
+      answer: 'Yes! For non-EU/EEA students (including Indian nationals), tuition fees at Austrian public universities are fixed by federal law at €726.72 per semester (~₹70,000 INR) plus €22.70 ÖH student union membership.',
+      order: 1,
+      isPublished: 1,
+    },
+    {
+      id: 'faq_02',
+      category: 'Visa & Bank Proof',
+      question: 'Do I need a Sperrkonto (Blocked Account) like Germany?',
+      answer: 'No! Austria does NOT require a blocked account. You can show proof of sufficient funds in a standard Indian savings bank account or fixed deposit in your or your parent\'s name.',
+      order: 2,
+      isPublished: 1,
+    },
+    {
+      id: 'faq_03',
+      category: 'Language & IELTS',
+      question: 'Can I study Master\'s in Austria in English without knowing German?',
+      answer: 'Yes. Top public universities like University of Vienna, TU Graz, TU Wien, and JKU Linz offer over 50+ fully English-taught Master\'s programs. A Medium of Instruction (MOI) certificate from a recognized Kerala university or IELTS 6.5+ is accepted.',
+      order: 3,
+      isPublished: 1,
+    },
+    {
+      id: 'faq_04',
+      category: 'Part-Time Work',
+      question: 'Can Indian students work part-time while studying in Austria?',
+      answer: 'Yes! International students holding an Aufenthaltsbewilligung Studierende permit are legally allowed to work up to 20 hours per week during semesters with full work permit rights.',
+      order: 4,
+      isPublished: 1,
+    },
+    {
+      id: 'faq_05',
+      category: 'Apostille & Legalization',
+      question: 'What is MEA Apostille and degree attestation in Kerala?',
+      answer: 'Before submitting your application to Austrian universities or Embassy Delhi, your Kerala degree certificates and transcripts must undergo Home Department attestation in Trivandrum followed by MEA Apostille sticker from New Delhi.',
+      order: 5,
+      isPublished: 1,
+    }
+  ];
+
+  for (const faq of sampleFaqs) {
+    await db.insert(faqs).values(faq).onConflictDoNothing().catch(() => {});
+  }
+  console.log(`✅ Sample FAQs Seeded.`);
 
   console.log('🎉 FlyAustria Executive CRM Seed Completed Successfully!');
 }
