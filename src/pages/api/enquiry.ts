@@ -4,26 +4,16 @@ import { db, enquiries } from '../../db';
 
 export const POST: APIRoute = async ({ request, redirect }) => {
   try {
-    let body: any = {};
-    const contentType = request.headers.get('content-type') || '';
+    let body: Record<string, any> = {};
+    const contentType = (request.headers.get('content-type') || '').toLowerCase();
     const isJsonRequest = contentType.includes('application/json') || request.headers.get('accept')?.includes('application/json');
 
-    const text = await request.text();
-    console.log('[API Enquiry Debug] Raw text:', text, 'ContentType:', contentType);
-    if (text) {
+    if (contentType.includes('application/json')) {
       try {
-        body = JSON.parse(text);
-      } catch (e) {
-        try {
-          const params = new URLSearchParams(text);
-          body = Object.fromEntries(params.entries());
-        } catch (e2) {}
-      }
-    }
-    console.log('[API Enquiry Debug] Parsed body:', body);
-
-    // Fallback if body is still empty (e.g. multipart/form-data)
-    if (!body || Object.keys(body).length === 0) {
+        body = await request.json();
+      } catch (e) {}
+    } else {
+      // Handles multipart/form-data & application/x-www-form-urlencoded
       try {
         const formData = await request.formData();
         body = {
@@ -36,7 +26,19 @@ export const POST: APIRoute = async ({ request, redirect }) => {
           additionalNotes: formData.get('additionalNotes')?.toString() || formData.get('message')?.toString() || '',
           source: formData.get('source')?.toString() || 'hero_form',
         };
-      } catch (e) {}
+      } catch (e) {
+        try {
+          const text = await request.text();
+          if (text) {
+            try {
+              body = JSON.parse(text);
+            } catch (e2) {
+              const params = new URLSearchParams(text);
+              body = Object.fromEntries(params.entries());
+            }
+          }
+        } catch (e3) {}
+      }
     }
 
     const fullName = body.fullName || body.name || '';
