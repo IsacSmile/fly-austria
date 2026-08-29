@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import ProcessTimeline from '../components/ProcessTimeline.astro';
+import LeadMagnetSection from '../components/LeadMagnetSection.astro';
+
+const documentChecklist = [
+  {
+    doc: '1. Degree Certificate & Marksheets',
+    desc: 'Official Bachelor’s degree certificate and all semester mark sheets issued by your Kerala university (MG University, Calicut University, KTU, Kerala University).',
+    status: 'Mandatory',
+  },
+  {
+    doc: '2. MEA Apostille Attestation',
+    desc: 'Original degree certificate and transcripts legalized with MEA Apostille sticker from Ministry of External Affairs, New Delhi (handled by FlyAustria in Kochi).',
+    status: 'Mandatory',
+  },
+  {
+    doc: '3. Proof of English Proficiency',
+    desc: 'IELTS Academic (overall 6.5+) or official Medium of Instruction (MOI) certificate from your Kerala college confirming your Bachelor’s was taught in English.',
+    status: 'Mandatory',
+  },
+  {
+    doc: '4. Proof of Financial Funds (~€11,000)',
+    desc: 'Bank statement of Indian savings bank account (student or parents account) showing sufficient funds for living expenses. NO German-style blocked account needed!',
+    status: 'Mandatory',
+  },
+  {
+    doc: '5. OEAD Student Housing Agreement',
+    desc: 'Confirmed student room rental contract from OEAD Housing / Wihast / Kolping dorms in Vienna, Graz, or Linz for a minimum 6-month period.',
+    status: 'Mandatory',
+  },
+  {
+    doc: '6. Police Clearance Certificate (PCC)',
+    desc: 'PCC issued by Regional Passport Office (RPO Kochi/Trivandrum/Calicut) with MEA Apostille attestation, valid within 3 months of visa filing.',
+    status: 'Mandatory',
+  },
+  {
+    doc: '7. Austrian Travel Health Insurance',
+    desc: 'Schengen travel health insurance policy providing minimum €30,000 coverage until registration into ÖGK Austrian national health insurance.',
+    status: 'Mandatory',
+  },
+  {
+    doc: '8. Residence Permit Application (Studierende)',
+    desc: 'Duly filled Aufenthaltsbewilligung Studierende form with passport-size biometric photographs compliant with Austrian Embassy standards.',
+    status: 'Mandatory',
+  },
+];
+---
+
+<BaseLayout
+  title="Process & Visa Document Checklist | FlyAustria Study Abroad"
+  description="Detailed step-by-step process timeline and visa document checklist for Kerala students applying for Austrian public universities and student residence permits."
+>
+  <PageHero
+    badgeText="STEP-BY-STEP ADMISSION ROADMAP"
+    titlePrefix="Seamless Visa &"
+    titleHighlight="University Admission"
+    titleSuffix="Process for 2026!"
+    subtitle="Clear 6-step roadmap from profile assessment in Kochi to landing at Vienna Airport."
+    description="Understand every document required by Austrian public university admission portals and VFS New Delhi for your Aufenthaltsbewilligung Studierende residence permit."
+    primaryCtaText="BOOK FREE CONSULTATION"
+    primaryCtaLink="/#contact-section"
+    secondaryCtaText="INSTAGRAM"
+    secondaryCtaLink="https://instagram.com"
+    highlightsTitle="PROCESS MILESTONES"
+    highlightsBadge="ROADMAP"
+    highlights={[
+      { icon: "1️⃣", title: "Free Check", subtitle: "Kochi Profile Evaluation" },
+      { icon: "2️⃣", title: "Apostille", subtitle: "MEA Attestation" },
+      { icon: "3️⃣", title: "Uni Offer", subtitle: "Admission Letter Lock" },
+      { icon: "4️⃣", title: "Visa Grant", subtitle: "Embassy Permit Stamping" }
+    ]}
+  />
+
+  <!-- 6-Step Visual Timeline -->
+  <ProcessTimeline />
+
+  <!-- Document Checklist Section -->
+  <section class="py-16 bg-white border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-14">
+        <span class="inline-block px-3 py-1 text-xs font-bold uppercase tracking-widest text-[#C8102E] bg-red-50 rounded-full border border-red-100 mb-3">
+          Document Preparation
+        </span>
+        <h2 class="text-3xl font-extrabold text-[#0F172A]">
+          Official Austrian Student Visa Document Checklist 2026
+        </h2>
+        <p class="text-slate-600 text-sm mt-3 leading-relaxed">
+          Our Kochi office verifies each item before submitting your file to VFS / Austrian Embassy New Delhi.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+        {documentChecklist.map((item) => (
+          <div class="p-6 rounded-2xl bg-[#FAF9F6] border border-slate-200 hover:border-red-200 transition-all flex items-start gap-4">
+            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 font-bold text-xs flex items-center justify-center shrink-0 mt-1">
+              ✓
+            </div>
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-1">
+                <h3 class="text-base font-bold text-slate-900">{item.doc}</h3>
+                <span class="text-[10px] font-semibold bg-red-50 text-[#C8102E] px-2 py-0.5 rounded border border-red-100 shrink-0">
+                  {item.status}
+                </span>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed">{item.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <LeadMagnetSection />
+</BaseLayout>

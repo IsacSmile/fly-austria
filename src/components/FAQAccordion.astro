@@ -1,0 +1,40 @@
+---
+interface FAQItem {
+  id: string;
+  category: string;
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  faqs: FAQItem[];
+}
+
+const { faqs } = Astro.props;
+---
+
+<div class="space-y-3 sm:space-y-4 max-w-4xl mx-auto">
+  {faqs.map((faq, idx) => (
+    <details
+      class="group glass-panel rounded-2xl border border-slate-200 p-4 sm:p-5 [&_summary::-webkit-details-marker]:hidden transition-all duration-200"
+      open={idx === 0}
+    >
+      <summary class="flex items-center justify-between cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#C8102E] rounded-xl p-1.5 min-h-[48px] active:bg-slate-50/50">
+        <div class="flex items-center gap-3 pr-3">
+          <span class="w-2 h-2 rounded-full bg-[#C8102E] shrink-0"></span>
+          <h3 class="text-sm sm:text-lg font-bold text-slate-900 group-hover:text-[#C8102E] transition-colors leading-snug">
+            {faq.question}
+          </h3>
+        </div>
+        <span class="shrink-0 text-slate-400 group-open:-rotate-180 transition-transform duration-300 ml-2">
+          <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </span>
+      </summary>
+      <div class="mt-3 pt-3 border-t border-slate-100 text-xs sm:text-sm text-slate-600 leading-relaxed pl-4 sm:pl-5">
+        <p>{faq.answer}</p>
+      </div>
+    </details>
+  ))}
+</div>

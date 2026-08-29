@@ -1,0 +1,308 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TrustBar from '../components/TrustBar.astro';
+import PartnerLogos from '../components/PartnerLogos.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import UniversityCard from '../components/UniversityCard.astro';
+import TestimonialCard from '../components/TestimonialCard.astro';
+import TestimonialSlider from '../components/TestimonialSlider.astro';
+import ProcessTimeline from '../components/ProcessTimeline.astro';
+import LoanCalculator from '../components/LoanCalculator.astro';
+import FAQAccordion from '../components/FAQAccordion.astro';
+import LeadMagnetSection from '../components/LeadMagnetSection.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { db, universities, testimonials, faqs } from '../db';
+
+// Fetch DB data
+const allUniversities = await db.select().from(universities).limit(3);
+const allTestimonials = await db.select().from(testimonials).limit(3);
+const allFaqs = await db.select().from(faqs).limit(5);
+
+const servicesList = [
+  {
+    title: "Austrian Public University Admissions",
+    description: "End-to-end guidance for English-taught Bachelor's and Master's programs at University of Vienna, TU Graz, TU Wien, JKU Linz & Innsbruck.",
+    highlights: ["0% Tuition (€726/sem admin fee)", "No blocked account needed", "IELTS / MOI guidance"],
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>`
+  },
+  {
+    title: "Austrian Student Residence Permit (Visa D)",
+    description: "Expert preparation of your Aufenthaltsbewilligung Studierende visa file for the Austrian Embassy (VFS New Delhi) with 98%+ approval record.",
+    highlights: ["Embassy file verification", "Financial proof structuring", "Zero Sperrkonto hassle"],
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>`
+  },
+  {
+    title: "Degree Legalization & MEA Apostille",
+    description: "Fast-track MEA Apostille attestation for Kerala university degrees, transcripts, birth certificates, and police clearance in Kochi & Delhi.",
+    highlights: ["Kerala University attestation", "MEA Apostille New Delhi", "Austrian Embassy legalization"],
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>`
+  },
+  {
+    title: "OEAD Student Accommodation Lock",
+    description: "Guaranteed student dorm reservation (OEAD / Wihast housing in Vienna, Graz, Linz) required as official residence proof for visa issuance.",
+    highlights: ["Official rental contract", "Dorm locations near campus", "Affordable €320-€480/month"],
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>`
+  },
+  {
+    title: "Vienna Airport Pickup & Post-Arrival",
+    description: "Personal airport pickup at Vienna Airport (VIE) or Graz (GRZ), municipal registration (Meldezettel), bank account setup, and transport card.",
+    highlights: ["Kochi to Vienna companion support", "Austrian bank account setup", "Meldezettel registration"],
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>`
+  },
+  {
+    title: "Spouse & Dependent Visa Guidance",
+    description: "Family reunion visa guidance for married students wishing to bring their spouse to Austria with full work rights.",
+    highlights: ["Full work permit for spouse", "Family housing support", "Health insurance registration"],
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>`
+  }
+];
+---
+
+<BaseLayout
+  title="FlyAustria Study Abroad | Kerala's #1 Austria Study Consultancy (Kochi)"
+  description="Exclusively helping Kerala students gain admission to Austrian public universities (€726/sem), student visas, OEAD housing, and MEA Apostille in Kochi."
+  faqs={allFaqs}
+>
+  <!-- Hero Section -->
+  <section class="relative pt-12 pb-20 lg:pt-20 lg:pb-28 overflow-hidden bg-pattern">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Hero Text -->
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+          
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-red-50 border border-red-200 text-[#C8102E] text-[10px] sm:text-xs font-bold shadow-xs">
+            <span class="w-2 h-2 rounded-full bg-[#C8102E] animate-pulse shrink-0"></span>
+            <span>Kochi-Based • Austria Educational Specialists</span>
+          </div>
+
+          <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#0F172A] tracking-tight leading-[1.15] font-serif">
+            Study in <span class="text-[#C8102E]">Austrian Public Universities</span> with Zero Tuition Fees
+          </h1>
+
+          <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+            Get world-class European Master's degrees for just <strong class="text-slate-900">€726 per semester (~₹70,000 INR)</strong>. Complete admissions, MEA apostille attestation, OEAD student housing, and Austrian Student Residence Permit filing handled from Kochi.
+          </p>
+
+          <!-- Dual Primary CTAs (Header Pill Style) -->
+          <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 sm:gap-4 pt-2">
+            <a
+              href="/testimonials"
+              class="bg-[#0F172A] hover:bg-[#C8102E] text-white text-xs font-bold tracking-wider uppercase min-h-[48px] px-6 py-3.5 rounded-full shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 w-full sm:w-auto active:scale-95"
+            >
+              <svg class="w-4 h-4 fill-amber-400 shrink-0" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+              <span>Explore Success Stories</span>
+              <svg class="w-3.5 h-3.5 fill-current shrink-0 ml-0.5" viewBox="0 0 24 24">
+                <path d="M13.025 1l-1.42 1.414 6.586 6.586h-18.191v2h18.191l-6.586 6.586 1.42 1.414 9-9z"/>
+              </svg>
+            </a>
+
+            <a
+              href="#eligibility-form"
+              class="bg-white hover:bg-slate-100 text-[#0F172A] border border-slate-300 text-xs font-bold tracking-wider uppercase min-h-[48px] px-6 py-3.5 rounded-full shadow-xs hover:shadow-sm transition-all duration-200 flex items-center justify-center gap-2 w-full sm:w-auto active:scale-95"
+            >
+              <span>Check University Eligibility</span>
+              <svg class="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24">
+                <path d="M13.025 1l-1.42 1.414 6.586 6.586h-18.191v2h18.191l-6.586 6.586 1.42 1.414 9-9z"/>
+              </svg>
+            </a>
+          </div>
+
+          <!-- Quick Trust Badges -->
+          <div class="pt-6 border-t border-slate-200/80 flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-6 text-xs font-semibold text-slate-600">
+            <div class="flex items-center gap-2">
+              <span class="text-emerald-500 text-base">✓</span>
+              <span>NO Blocked Account (Sperrkonto)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-emerald-500 text-base">✓</span>
+              <span>20 Hours/Week Work Permit</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-emerald-500 text-base">✓</span>
+              <span>Trusted by Kerala Families</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Hero Form Card -->
+        <div id="eligibility-form" class="lg:col-span-5">
+          <ContactForm />
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Stats Bar -->
+  <TrustBar />
+
+  <!-- Partner Austrian Public Universities Logos Grid -->
+  <PartnerLogos />
+
+  <!-- Services Overview Grid -->
+  <section class="py-20 bg-[#FAF9F6]" id="services">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="inline-block px-3 py-1 text-xs font-bold uppercase tracking-widest text-[#C8102E] bg-red-50 rounded-full border border-red-100 mb-3">
+          100% Specialized Support
+        </span>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0F172A] tracking-tight font-serif">
+          Complete Admissions & Visa Workflow for Austria
+        </h2>
+        <p class="text-slate-600 text-sm sm:text-base mt-3 leading-relaxed">
+          From degree authentication in Kerala to settling down in your student dorm in Vienna or Graz.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {servicesList.map((s) => (
+          <ServiceCard
+            title={s.title}
+            description={s.description}
+            highlights={s.highlights}
+            icon={s.icon}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Austria vs Germany / UK / Canada -->
+  <section class="py-20 bg-white border-y border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <div class="lg:col-span-6 space-y-6">
+          <span class="inline-block px-3 py-1 text-xs font-bold uppercase tracking-widest text-amber-800 bg-amber-50 rounded-full border border-amber-200">
+            Smart Choice for Kerala Graduates
+          </span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-[#0F172A] tracking-tight leading-snug font-serif">
+            Why Austria Over Germany, UK, or Canada in 2026?
+          </h2>
+          <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+            While Germany imposes complex blocked account rules and UK/Canada tuition fees exceed ₹25 Lakhs per year, Austria offers top-ranked European public universities at just €726 per semester with zero financial lock-in.
+          </p>
+
+          <div class="space-y-4 pt-2">
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-4">
+              <div class="w-8 h-8 rounded-lg bg-red-100 text-[#C8102E] font-bold flex items-center justify-center shrink-0">€</div>
+              <div>
+                <h4 class="text-sm font-bold text-slate-900">Fixed Government Tuition Fee</h4>
+                <p class="text-xs text-slate-600 mt-0.5">Public tuition is fixed at €726.72/sem across University of Vienna, TU Graz & TU Wien.</p>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-4">
+              <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center shrink-0">₹</div>
+              <div>
+                <h4 class="text-sm font-bold text-slate-900">No Blocked Account (Sperrkonto)</h4>
+                <p class="text-xs text-slate-600 mt-0.5">Show proof of funds in a standard Indian savings bank account without locking money in expensive overseas accounts.</p>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-4">
+              <div class="w-8 h-8 rounded-lg bg-sky-100 text-sky-700 font-bold flex items-center justify-center shrink-0">💼</div>
+              <div>
+                <h4 class="text-sm font-bold text-slate-900">Post-Study Work Permit & EU Red-White-Red Card</h4>
+                <p class="text-xs text-slate-600 mt-0.5">12-month post-study job search visa leading directly to Austria's Red-White-Red Card permanent residence pathway.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Featured Universities Teaser -->
+        <div class="lg:col-span-6 space-y-6">
+          <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-8 rounded-3xl shadow-xl">
+            <h3 class="text-xl font-bold mb-2 font-serif">Top Austrian Public Universities</h3>
+            <p class="text-xs text-slate-300 mb-6">Explore tuition-free English Master's and Bachelor's programs.</p>
+
+            <div class="space-y-4">
+              {allUniversities.map((u) => (
+                <div class="p-4 rounded-xl bg-slate-800/80 border border-slate-700/80 flex items-center justify-between">
+                  <div>
+                    <h4 class="text-sm font-bold text-white">{u.name}</h4>
+                    <p class="text-[11px] text-slate-400">{u.city}, Austria • {u.tuitionFee}</p>
+                  </div>
+                  <a href="/universities" class="text-xs font-semibold text-[#C8102E] hover:underline">View Programs</a>
+                </div>
+              ))}
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-slate-700 text-center">
+              <a href="/universities" class="btn-primary w-full text-center py-3 text-xs font-bold rounded-xl">
+                Explore All Austrian Universities →
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive EMI & Education Loan Calculator -->
+  <LoanCalculator />
+
+  <!-- 6-Step Process Timeline -->
+  <ProcessTimeline />
+
+  <!-- Interactive Student Success Stories Slider -->
+  <TestimonialSlider />
+
+  <!-- Lead Magnet Download Banner -->
+  <LeadMagnetSection />
+
+  <!-- FAQ Accordion -->
+  <section class="py-20 bg-white border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-14">
+        <span class="inline-block px-3 py-1 text-xs font-bold uppercase tracking-widest text-[#C8102E] bg-red-50 rounded-full border border-red-100 mb-3">
+          Got Questions?
+        </span>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0F172A] tracking-tight font-serif">
+          Frequently Asked Questions
+        </h2>
+        <p class="text-slate-600 text-sm sm:text-base mt-3 leading-relaxed">
+          Everything you need to know about Austrian student visas, public tuition, and living costs.
+        </p>
+      </div>
+
+      <FAQAccordion faqs={allFaqs} />
+    </div>
+  </section>
+
+  <!-- Final WhatsApp CTA Banner -->
+  <section class="py-16 bg-[#0F172A] text-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+      <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight font-serif">
+        Ready to Start Your Austrian University Journey?
+      </h2>
+      <p class="text-slate-300 text-xs sm:text-base max-w-2xl mx-auto leading-relaxed">
+        Speak directly with our Kochi consultants today. We will evaluate your degree, check university intake deadlines, and guide your visa step-by-step.
+      </p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 pt-2">
+        <a
+          href="https://wa.me/919876543210?text=Hi%20FlyAustria!%20I%20would%20like%20to%20schedule%20a%20free%20consultation%20for%20studying%20in%20Austria."
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-whatsapp w-full sm:w-auto min-h-[48px] justify-center py-3.5 px-8 text-sm font-bold uppercase tracking-wider rounded-full shadow-lg active:scale-95"
+        >
+          <svg class="w-5 h-5 fill-current shrink-0" viewBox="0 0 24 24">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/>
+          </svg>
+          <span>Chat on WhatsApp Now</span>
+        </a>
+        <a
+          href="/contact"
+          class="btn-secondary w-full sm:w-auto min-h-[48px] justify-center py-3.5 px-8 text-xs font-bold uppercase tracking-wider rounded-full active:scale-95"
+        >
+          Visit Kochi Office / Book Call
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

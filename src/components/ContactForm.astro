@@ -1,0 +1,346 @@
+---
+interface Props {
+  success?: boolean;
+}
+
+const { success } = Astro.props;
+
+const inputStyle = "w-full min-h-[44px] px-3.5 py-2.5 text-xs sm:text-[13px] rounded-xl border border-slate-300/80 focus:border-[#C8102E] focus:outline-none focus:ring-2 focus:ring-[#C8102E]/20 bg-white text-slate-800 font-medium transition-all shadow-2xs hover:border-slate-400 placeholder:text-slate-400 placeholder:font-normal";
+---
+
+<div class="glass-panel p-4 sm:p-7 rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-900/5 relative">
+  
+  <!-- Header -->
+  <div class="mb-4 sm:mb-5">
+    <span class="inline-block px-3 py-1 text-[10px] sm:text-[11px] font-extrabold text-[#C8102E] bg-red-50 rounded-full border border-red-100 mb-1.5 uppercase tracking-wider">
+      Fast-Track Assessment
+    </span>
+    <h3 class="text-lg sm:text-2xl font-extrabold text-[#0F172A] font-serif tracking-tight">Request Free Eligibility Check</h3>
+    <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5">Our Kochi counselor will analyze your profile and contact you within 2 hours.</p>
+  </div>
+
+  <!-- Server-rendered success state fallback -->
+  {success ? (
+    <div class="p-6 bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-2xl text-center space-y-3">
+      <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-xl font-bold">
+        ✓
+      </div>
+      <h4 class="text-lg font-extrabold font-serif">Submission Received!</h4>
+      <p class="text-xs sm:text-sm text-emerald-800 font-medium leading-relaxed">
+        Thanks for your submission, our executive will reach you shortly.
+      </p>
+      <a href="/" class="btn-primary inline-flex min-h-[44px] py-2.5 px-5 text-xs rounded-full mt-2">
+        Back to Home
+      </a>
+    </div>
+  ) : (
+    <>
+      <!-- Dynamic Client-Side Success Message -->
+      <div id="hero-form-success" class="hidden p-6 sm:p-8 bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-2xl text-center space-y-3.5">
+        <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-xl font-bold">
+          ✓
+        </div>
+        <h4 class="text-lg sm:text-xl font-extrabold font-serif text-emerald-950">Submission Received!</h4>
+        <p class="text-xs sm:text-sm font-semibold text-emerald-850 leading-relaxed">
+          Thanks <span id="hero-user-name" class="font-extrabold text-emerald-950 underline"></span> for your submission, our executive will reach you shortly.
+        </p>
+        <button
+          type="button"
+          id="submit-another-btn"
+          class="btn-primary inline-flex min-h-[44px] py-2.5 px-6 text-xs font-bold uppercase tracking-wider rounded-full mt-3 cursor-pointer"
+        >
+          Submit Another Profile
+        </button>
+      </div>
+
+      <form action="/api/enquiry" method="POST" id="hero-eligibility-form" class="space-y-3.5">
+        <input type="hidden" name="source" value="hero_form" />
+        
+        <!-- Row 1: Name & WhatsApp -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label for="name" class="block text-[11px] font-bold text-slate-700 mb-1 tracking-tight">Full Name *</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              placeholder="e.g. Anandhu Varma"
+              class={inputStyle}
+            />
+          </div>
+
+          <div>
+            <label for="phone" class="block text-[11px] font-bold text-slate-700 mb-1 tracking-tight">WhatsApp Number *</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              required
+              placeholder="e.g. +91 9876543210"
+              class={inputStyle}
+            />
+          </div>
+        </div>
+
+        <!-- Row 2: Email & Highest Qualification -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label for="email" class="block text-[11px] font-bold text-slate-700 mb-1 tracking-tight">Email Address *</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="anandhu@example.com"
+              class={inputStyle}
+            />
+          </div>
+
+          <!-- Custom Floating Dropdown 1: Highest Qualification -->
+          <div class="relative custom-select-wrapper" data-select-id="highestQualification">
+            <label class="block text-[11px] font-bold text-slate-700 mb-1 tracking-tight">Highest Qualification *</label>
+            
+            <input type="hidden" id="highestQualification" name="highestQualification" required value="B.Tech / B.E." />
+            
+            <button
+              type="button"
+              class="custom-select-trigger w-full min-h-[44px] px-3.5 py-2.5 text-xs sm:text-[13px] rounded-xl border border-slate-300/80 bg-white text-slate-800 font-medium flex items-center justify-between shadow-2xs hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-[#C8102E]/20 transition-all cursor-pointer"
+            >
+              <span class="trigger-label text-slate-800 font-medium truncate">B.Tech / B.E.</span>
+              <svg class="w-3.5 h-3.5 text-slate-500 transition-transform duration-200 chevron-icon shrink-0 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+
+            <div class="custom-select-menu absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200/90 rounded-2xl shadow-xl shadow-slate-900/10 z-50 hidden p-1.5 space-y-0.5">
+              <button type="button" data-value="B.Tech / B.E." class="option-item w-full px-3 py-1.5 text-xs font-medium rounded-lg flex items-center justify-between text-slate-800 hover:bg-[#0F172A] hover:text-white transition-colors cursor-pointer text-left">
+                <span>B.Tech / B.E.</span>
+                <span class="check-icon text-emerald-500 font-bold">✓</span>
+              </button>
+              <button type="button" data-value="B.Sc / B.C.A." class="option-item w-full px-3 py-1.5 text-xs font-medium rounded-lg flex items-center justify-between text-slate-700 hover:bg-[#0F172A] hover:text-white transition-colors cursor-pointer text-left">
+                <span>B.Sc / B.C.A.</span>
+                <span class="check-icon hidden text-emerald-500 font-bold">✓</span>
+              </button>
+              <button type="button" data-value="B.Com / B.B.A." class="option-item w-full px-3 py-1.5 text-xs font-medium rounded-lg flex items-center justify-between text-slate-700 hover:bg-[#0F172A] hover:text-white transition-colors cursor-pointer text-left">
+                <span>B.Com / B.B.A.</span>
+                <span class="check-icon hidden text-emerald-500 font-bold">✓</span>
+              </button>
+              <button type="button" data-value="Higher Secondary (12th)" class="option-item w-full px-3 py-1.5 text-xs font-medium rounded-lg flex items-center justify-between text-slate-700 hover:bg-[#0F172A] hover:text-white transition-colors cursor-pointer text-left">
+                <span>Higher Secondary (12th)</span>
+                <span class="check-icon hidden text-emerald-500 font-bold">✓</span>
+              </button>
+              <button type="button" data-value="Master Degree" class="option-item w-full px-3 py-1.5 text-xs font-medium rounded-lg flex items-center justify-between text-slate-700 hover:bg-[#0F172A] hover:text-white transition-colors cursor-pointer text-left">
+                <span>Master Degree</span>
+                <span class="check-icon hidden text-emerald-500 font-bold">✓</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 3: Target Degree & Preferred Intake -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          
+          <!-- Custom Floating Dropdown 2: Target Degree -->
+          <div class="relative custom-select-wrapper" data-select-id="targetDegree">
+            <label class="block text-[11px] font-bold text-slate-700 mb-1 tracking-tight">Target Degree in Austria *</label>
+            
+            <input type="hidden" id="targetDegree" name="targetDegree" required value="Master's Degree (English Taught)" />
+            
+            <button
+              type="button"
+              class="custom-select-trigger w-full px-3 py-2 text-[13px] rounded-xl border border-slate-300/80 bg-white text-slate-800 font-medium flex items-center justify-between shadow-2xs hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-[#C8102E]/20 transition-all cursor-pointer"
+            >
+              <span class="trigger-label text-slate-800 font-medium truncate">Master's Degree (English Taught)</span>
+              <svg class="w-3.5 h-3.5 text-slate-500 transition-transform duration-200 chevron-icon shrink-0 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+
+            <div class="custom-select-menu absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200/90 rounded-2xl shadow-xl shadow-slate-900/10 z-50 hidden p-1.5 space-y-0.5">
+              <button type="button" data-value="Master's Degree (English Taught)" class="option-item w-full px-3 py-1.5 text-xs font-medium rounded-lg flex items-center justify-between text-slate-800 hover:bg-[#0F172A] hover:text-white transition-colors cursor-pointer text-left">
+                <span>Master's Degree (English Taught)</span>
+                <span class="check-icon text-emerald-500 font-bold">✓</span>
+              </button>
+              <button type="button" data-value="Bachelor's Degree" class="option-item w-full px-3 py-1.5 text-xs font-medium rounded-lg flex items-center justify-between text-slate-700 hover:bg-[#0F172A] hover:text-white transition-colors cursor-pointer text-left">
+                <span>Bachelor's Degree</span>
+                <span class="check-icon hidden text-emerald-500 font-bold">✓</span>
+              </button>
+              <button type="button" data-value="PhD / Research" class="option-item w-full px-3 py-1.5 text-xs font-medium rounded-lg flex items-center justify-between text-slate-700 hover:bg-[#0F172A] hover:text-white transition-colors cursor-pointer text-left">
+                <span>PhD / Research</span>
+                <span class="check-icon hidden text-emerald-500 font-bold">✓</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Custom Floating Dropdown 3: Preferred Intake -->
+          <div class="relative custom-select-wrapper" data-select-id="preferredIntake">
+            <label class="block text-[11px] font-bold text-slate-700 mb-1 tracking-tight">Preferred Intake *</label>
+            
+            <input type="hidden" id="preferredIntake" name="preferredIntake" required value="Winter Semester 2026 (Oct)" />
+            
+            <button
+              type="button"
+              class="custom-select-trigger w-full px-3 py-2 text-[13px] rounded-xl border border-slate-300/80 bg-white text-slate-800 font-medium flex items-center justify-between shadow-2xs hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-[#C8102E]/20 transition-all cursor-pointer"
+            >
+              <span class="trigger-label text-slate-800 font-medium truncate">Winter Semester 2026 (Oct)</span>
+              <svg class="w-3.5 h-3.5 text-slate-500 transition-transform duration-200 chevron-icon shrink-0 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+
+            <div class="custom-select-menu absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200/90 rounded-2xl shadow-xl shadow-slate-900/10 z-50 hidden p-1.5 space-y-0.5">
+              <button type="button" data-value="Winter Semester 2026 (Oct)" class="option-item w-full px-3 py-1.5 text-xs font-medium rounded-lg flex items-center justify-between text-slate-800 hover:bg-[#0F172A] hover:text-white transition-colors cursor-pointer text-left">
+                <span>Winter Semester 2026 (Oct)</span>
+                <span class="check-icon text-emerald-500 font-bold">✓</span>
+              </button>
+              <button type="button" data-value="Summer Semester 2027 (Mar)" class="option-item w-full px-3 py-1.5 text-xs font-medium rounded-lg flex items-center justify-between text-slate-700 hover:bg-[#0F172A] hover:text-white transition-colors cursor-pointer text-left">
+                <span>Summer Semester 2027 (Mar)</span>
+                <span class="check-icon hidden text-emerald-500 font-bold">✓</span>
+              </button>
+              <button type="button" data-value="Winter Semester 2027" class="option-item w-full px-3 py-1.5 text-xs font-medium rounded-lg flex items-center justify-between text-slate-700 hover:bg-[#0F172A] hover:text-white transition-colors cursor-pointer text-left">
+                <span>Winter Semester 2027</span>
+                <span class="check-icon hidden text-emerald-500 font-bold">✓</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Additional Notes -->
+        <div>
+          <label for="message" class="block text-[11px] font-bold text-slate-700 mb-1 tracking-tight">Additional Notes / Questions (Optional)</label>
+          <textarea
+            id="message"
+            name="message"
+            rows="2.5"
+            placeholder="Mention your branch, CGPA, IELTS score if taken..."
+            class={inputStyle}
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          id="hero-submit-btn"
+          class="btn-primary w-full justify-center py-3.5 px-6 text-xs font-bold uppercase tracking-wider rounded-full shadow-md cursor-pointer flex items-center gap-2"
+        >
+          <span>Submit Profile for Assessment</span>
+          <svg class="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24">
+            <path d="M13.025 1l-1.42 1.414 6.586 6.586h-18.191v2h18.191l-6.586 6.586 1.42 1.414 9-9z"/>
+          </svg>
+        </button>
+      </form>
+    </>
+  )}
+</div>
+
+<script>
+  // Custom Floating Select JS Engine
+  const selectWrappers = document.querySelectorAll('.custom-select-wrapper');
+
+  selectWrappers.forEach((wrapper) => {
+    const trigger = wrapper.querySelector('.custom-select-trigger');
+    const menu = wrapper.querySelector('.custom-select-menu');
+    const label = wrapper.querySelector('.trigger-label');
+    const hiddenInput = wrapper.querySelector('input[type="hidden"]') as HTMLInputElement;
+    const chevron = wrapper.querySelector('.chevron-icon');
+    const optionBtns = wrapper.querySelectorAll('.option-item');
+
+    if (!trigger || !menu || !label || !hiddenInput) return;
+
+    // Toggle menu
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      
+      // Close other open menus first
+      document.querySelectorAll('.custom-select-menu').forEach((m) => {
+        if (m !== menu) m.classList.add('hidden');
+      });
+      document.querySelectorAll('.chevron-icon').forEach((c) => {
+        if (c !== chevron) c.classList.remove('rotate-180');
+      });
+
+      const isHidden = menu.classList.contains('hidden');
+      if (isHidden) {
+        menu.classList.remove('hidden');
+        if (chevron) chevron.classList.add('rotate-180');
+      } else {
+        menu.classList.add('hidden');
+        if (chevron) chevron.classList.remove('rotate-180');
+      }
+    });
+
+    // Select option
+    optionBtns.forEach((optBtn) => {
+      optBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const val = optBtn.getAttribute('data-value');
+        if (!val) return;
+
+        // Update hidden input value
+        hiddenInput.value = val;
+        label.textContent = val;
+
+        // Update active check icon styles
+        optionBtns.forEach((b) => {
+          const check = b.querySelector('.check-icon');
+          if (b.getAttribute('data-value') === val) {
+            if (check) check.classList.remove('hidden');
+          } else {
+            if (check) check.classList.add('hidden');
+          }
+        });
+
+        // Close menu
+        menu.classList.add('hidden');
+        if (chevron) chevron.classList.remove('rotate-180');
+      });
+    });
+  });
+
+  // Close menus when clicking outside
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.custom-select-menu').forEach((m) => m.classList.add('hidden'));
+    document.querySelectorAll('.chevron-icon').forEach((c) => c.classList.remove('rotate-180'));
+  });
+
+  // Handle Form Submission with personalized success message
+  const heroForm = document.getElementById('hero-eligibility-form') as HTMLFormElement;
+  const successBox = document.getElementById('hero-form-success');
+  const userNameSpan = document.getElementById('hero-user-name');
+  const submitAnotherBtn = document.getElementById('submit-another-btn');
+
+  if (heroForm && successBox) {
+    heroForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(heroForm);
+      const nameVal = (formData.get('name') || '').toString().trim();
+
+      try {
+        const res = await fetch('/api/enquiry', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (res.ok) {
+          heroForm.classList.add('hidden');
+          if (userNameSpan) userNameSpan.textContent = nameVal || 'there';
+          successBox.classList.remove('hidden');
+        } else {
+          heroForm.submit();
+        }
+      } catch (err) {
+        console.error('Error submitting form:', err);
+        heroForm.submit();
+      }
+    });
+  }
+
+  if (submitAnotherBtn && heroForm && successBox) {
+    submitAnotherBtn.addEventListener('click', () => {
+      heroForm.reset();
+      successBox.classList.add('hidden');
+      heroForm.classList.remove('hidden');
+    });
+  }
+</script>

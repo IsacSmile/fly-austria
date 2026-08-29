@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
+---
+
+<BaseLayout
+  title="Austria Study Abroad Guides & Resources | FlyAustria Kochi"
+  description="Read practical guides on cost of living in Austria, Austrian student visa document checklists, and English-taught Master's degrees in public universities."
+>
+  <PageHero
+    badgeText="STUDY ABROAD KNOWLEDGE HUB"
+    titlePrefix="Expert Guides on"
+    titleHighlight="Studying in Austria"
+    titleSuffix="& Living Expenses!"
+    subtitle="In-depth articles written by counselors and alumni for Kerala students."
+    description="Explore step-by-step guides covering Austrian student visa filing, MEA attestation in Kochi, part-time job rules, and cost of living breakdowns for Vienna & Graz."
+    primaryCtaText="BOOK FREE CONSULTATION"
+    primaryCtaLink="/#contact-section"
+    secondaryCtaText="INSTAGRAM"
+    secondaryCtaLink="https://instagram.com"
+    highlightsTitle="FEATURED GUIDES"
+    highlightsBadge="UPDATED 2026"
+    highlights={[
+      { icon: "📄", title: "Visa Checklist", subtitle: "Embassy Requirements" },
+      { icon: "💶", title: "Cost of Living", subtitle: "Vienna & Graz Budget" },
+      { icon: "🇬🇧", title: "English Masters", subtitle: "Top Public Courses" },
+      { icon: "💼", title: "Part-Time Jobs", subtitle: "20 Hours/Week Rules" }
+    ]}
+  />
+
+  <section class="py-16 bg-[#FAF9F6]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {sortedPosts.map((post) => (
+          <article class="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:shadow-lg transition-shadow">
+            <div class="p-6 space-y-3">
+              <div class="flex items-center justify-between text-xs text-slate-500">
+                <span class="font-bold text-[#C8102E] bg-red-50 px-2.5 py-0.5 rounded border border-red-100">{post.data.category}</span>
+                <time>{post.data.pubDate}</time>
+              </div>
+
+              <h2 class="text-lg font-bold text-slate-900 leading-snug hover:text-[#C8102E] transition-colors">
+                <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+              </h2>
+
+              <p class="text-xs text-slate-600 leading-relaxed line-clamp-3">
+                {post.data.description}
+              </p>
+            </div>
+
+            <div class="p-6 pt-0 border-t border-slate-100 mt-4">
+              <a
+                href={`/blog/${post.slug}`}
+                class="text-xs font-bold text-[#C8102E] hover:text-[#A00C23] inline-flex items-center gap-1"
+              >
+                <span>Read Full Article</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                </svg>
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+
+    </div>
+  </section>
+</BaseLayout>

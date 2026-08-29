@@ -1,0 +1,125 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import TrustBar from '../components/TrustBar.astro';
+
+const coreValues = [
+  {
+    title: '100% Austrian Specialization',
+    desc: 'Unlike general agencies recommending high-commission private universities across 15 countries, we specialize exclusively in public Austrian universities with fixed €726 tuition.',
+  },
+  {
+    title: 'Honest Eligibility Assessment',
+    desc: 'We do not promise fake admissions. If your degree doesn’t match Austrian public university criteria, we tell you upfront in Kochi without taking advance fees.',
+  },
+  {
+    title: 'Zero Blocked Account Hassle',
+    desc: 'We guide you step-by-step on structuring valid proof of financial means using Indian savings accounts, saving Kerala families lakhs in foreign account lock-ins.',
+  },
+  {
+    title: 'End-to-End On-Ground Care',
+    desc: 'From document attestation in Kochi to airport pickup in Vienna and student dorm registration (Meldezettel), we remain with you throughout your degree.',
+  },
+];
+---
+
+<BaseLayout
+  title="About FlyAustria | Kerala’s Exclusive Austria Study Abroad Experts"
+  description="Learn about FlyAustria Study Abroad - Kochi's dedicated consultancy for Austrian public universities, student visas, and student housing in Vienna, Graz & Linz."
+>
+  <PageHero
+    badgeText="KERALA'S NICHE AUSTRIA CONSULTANCY"
+    titlePrefix="Dedicated exclusively to"
+    titleHighlight="Austrian Higher Education"
+    titleSuffix="& Student Success!"
+    subtitle="Founded in Kochi to bridge Kerala graduates directly to top-ranked tuition-free public universities."
+    description="We eliminate misinformation, hidden agency commissions, and blocked account hassles—offering 100% ethical admissions guidance for European public universities."
+    primaryCtaText="BOOK FREE CONSULTATION"
+    primaryCtaLink="/#contact-section"
+    secondaryCtaText="INSTAGRAM"
+    secondaryCtaLink="https://instagram.com"
+    highlightsTitle="FLYAUSTRIA STANDARDS"
+    highlightsBadge="TRUSTED"
+    highlights={[
+      { icon: "📍", title: "Kochi HQ", subtitle: "Face-to-Face Counseling" },
+      { icon: "💶", title: "€726 Tuition", subtitle: "Low Cost Public Unis" },
+      { icon: "🚫", title: "No Sperrkonto", subtitle: "Indian Bank Proof Accepted" },
+      { icon: "🤝", title: "End-to-End", subtitle: "Attestation to Vienna Landing" }
+    ]}
+  />
+
+  <!-- Story & Vision -->
+  <section class="py-16 bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <div class="lg:col-span-6 space-y-6">
+          <span class="text-xs font-bold uppercase tracking-widest text-[#C8102E]">Why We Built FlyAustria</span>
+          <h2 class="text-3xl font-extrabold text-[#0F172A] leading-snug">
+            Eliminating the Misinformation Around Studying in Central Europe
+          </h2>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            For years, students in Kerala looking to study in Europe were pushed towards expensive private colleges in the UK or faced frustrating blocked account delays in Germany. Austria remained a hidden gem—offering world-renowned public universities like University of Vienna and TU Graz at just €726 per semester (~₹70,000 INR), with no Sperrkonto requirement!
+          </p>
+          <p class="text-slate-600 text-sm leading-relaxed">
+            FlyAustria was established in Kochi to provide Kerala graduates with an ethical, 100% dedicated pathway to Austrian public universities, handling every detail from degree legalization to student residence permits.
+          </p>
+          
+          <div class="pt-4 flex items-center gap-4">
+            <a
+              href="https://wa.me/919876543210?text=Hi%20FlyAustria!%20I%20want%20to%20know%20more%20about%20your%20Kochi%20consultancy."
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-whatsapp py-3 px-6 text-xs font-bold rounded-xl"
+            >
+              Speak with Founder / Advisor
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-6">
+          <div class="bg-[#FAF9F6] p-8 rounded-3xl border border-slate-200 shadow-md space-y-6">
+            <h3 class="text-xl font-bold text-[#0F172A] border-b border-slate-200 pb-3">The FlyAustria Promise</h3>
+            
+            <div class="space-y-4">
+              {coreValues.map((val) => (
+                <div class="flex items-start gap-3">
+                  <div class="w-6 h-6 rounded-full bg-red-100 text-[#C8102E] font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">✓</div>
+                  <div>
+                    <h4 class="text-sm font-bold text-slate-900">{val.title}</h4>
+                    <p class="text-xs text-slate-600 mt-0.5 leading-relaxed">{val.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Stats -->
+  <TrustBar />
+
+  <!-- Kochi Office & Team Section -->
+  <section class="py-16 bg-[#FAF9F6]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-3xl">
+      <span class="inline-block px-3 py-1 text-xs font-bold uppercase tracking-widest text-[#C8102E] bg-red-50 rounded-full border border-red-100 mb-3">
+        Local Presence
+      </span>
+      <h2 class="text-3xl font-extrabold text-[#0F172A]">Headquartered in Kochi, Kerala</h2>
+      <p class="text-slate-600 text-sm mt-3 leading-relaxed">
+        Our team operates directly out of Kochi, providing face-to-face consultations, document verification, and embassy filing assistance for students across Kerala (Ernakulam, Trivandrum, Calicut, Thrissur, Kottayam).
+      </p>
+      
+      <div class="mt-8 p-6 bg-white rounded-2xl border border-slate-200 text-left shadow-sm max-w-xl mx-auto space-y-3">
+        <h4 class="font-bold text-slate-900 text-base">Kochi Office Details</h4>
+        <p class="text-xs text-slate-600"><strong>Address:</strong> 3rd Floor, Express Towers, MG Road, Kochi, Kerala 682016</p>
+        <p class="text-xs text-slate-600"><strong>Phone / WhatsApp:</strong> +91 98765 43210</p>
+        <p class="text-xs text-slate-600"><strong>Email:</strong> info@flyaustria.in</p>
+        <p class="text-xs text-slate-600"><strong>Working Hours:</strong> Monday – Saturday (9:30 AM – 6:00 PM IST)</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

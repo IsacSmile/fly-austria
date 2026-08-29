@@ -1,0 +1,32 @@
+{
+  "name": "fly-austria",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Production-ready website for FlyAustria Study Abroad - Kerala to Austrian Public Universities consultancy",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "db:seed": "node --import tsx/esm src/db/seed.ts"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.2.8",
+    "@astrojs/node": "^9.5.5",
+    "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/tailwind": "^6.0.2",
+    "@libsql/client": "^0.14.0",
+    "@neondatabase/serverless": "^1.0.2",
+    "@tailwindcss/vite": "^4.1.18",
+    "astro": "^5.16.8",
+    "drizzle-orm": "^0.45.1",
+    "tailwindcss": "^3.4.19"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "drizzle-kit": "^0.31.8",
+    "tsx": "^4.23.12",
+    "typescript": "^5.8.3"
+  }
+}

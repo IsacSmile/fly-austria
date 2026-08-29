@@ -1,0 +1,67 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppFloating from '../components/WhatsAppFloating.astro';
+import EngagementModal from '../components/EngagementModal.astro';
+import SchemaJsonLd from '../components/SchemaJsonLd.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonicalUrl?: string;
+  faqs?: Array<{ question: string; answer: string }>;
+}
+
+const {
+  title = "FlyAustria Study Abroad | Kerala's Austria Study Abroad Experts",
+  description = "Exclusive Kochi consultancy for Austrian public university admissions, €726/sem tuition, student residence permit visas, and housing support for Kerala students.",
+  image = "/images/hero-vienna.jpg",
+  canonicalUrl = Astro.url.href,
+  faqs,
+} = Astro.props;
+
+const siteName = "FlyAustria Study Abroad";
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  
+  <!-- Primary Meta Tags -->
+  <title>{title}</title>
+  <meta name="title" content={title} />
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalUrl} />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={new URL(image, Astro.url)} />
+  <meta property="og:site_name" content={siteName} />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content={canonicalUrl} />
+  <meta property="twitter:title" content={title} />
+  <meta property="twitter:description" content={description} />
+  <meta property="twitter:image" content={new URL(image, Astro.url)} />
+
+  <SchemaJsonLd faqs={faqs} />
+</head>
+<body class="bg-[#FAF9F6] text-[#0F172A] min-h-screen flex flex-col antialiased w-full max-w-full overflow-x-hidden">
+  <Header />
+  <main class="flex-grow w-full max-w-full overflow-x-hidden">
+    <slot />
+  </main>
+  <WhatsAppFloating />
+  <EngagementModal />
+  <Footer />
+</body>
+</html>

@@ -1,0 +1,159 @@
+---
+const navLinks = [
+  { name: 'Universities', href: '/universities' },
+  { name: 'Services', href: '/services' },
+  { name: 'About', href: '/about' },
+  { name: 'Process', href: '/process' },
+  { name: 'Stories', href: '/testimonials' },
+  { name: 'Blog', href: '/blog' },
+  { name: 'Contact', href: '/contact' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-4 z-50 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full transition-all">
+  <!-- Floating Pill Container with Scroll-based Dynamic Shadow -->
+  <div
+    id="header-pill"
+    class="bg-white/95 backdrop-blur-xl border border-slate-200/80 rounded-full shadow-none transition-all duration-300 ease-in-out px-5 sm:px-7 py-2.5 flex items-center justify-between"
+  >
+    <!-- Left Logo -->
+    <a
+      href="/"
+      class="flex items-center gap-2 group focus:outline-none focus:ring-2 focus:ring-[#C8102E] rounded-full bg-[#0F172A] px-3.5 py-1.5 border border-slate-800 shadow-xs shrink-0"
+    >
+      <img
+        src="/images/logo.png"
+        alt="FlyAustria Study Abroad Logo"
+        class="h-7 sm:h-8 w-auto transition-transform group-hover:scale-105"
+      />
+    </a>
+
+    <!-- Center Desktop Navigation -->
+    <nav class="hidden lg:flex items-center gap-7" aria-label="Main Navigation">
+      {navLinks.map((link) => {
+        const isActive = currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href));
+        return (
+          <a
+            href={link.href}
+            class={`text-xs font-bold tracking-wider uppercase transition-colors hover:text-[#C8102E] ${
+              isActive ? 'text-[#C8102E]' : 'text-slate-700'
+            }`}
+          >
+            {link.name}
+          </a>
+        );
+      })}
+    </nav>
+
+    <!-- Right Desktop Action CTA -->
+    <div class="hidden sm:flex items-center gap-3 shrink-0">
+      <a
+        href="https://wa.me/919876543210?text=Hi%20FlyAustria!%20I%20want%20to%20book%20a%20free%20consultation%20for%20studying%20in%20Austria."
+        target="_blank"
+        rel="noopener noreferrer"
+        class="bg-[#0F172A] hover:bg-[#C8102E] text-white text-xs font-bold tracking-wider uppercase px-5 py-2.5 rounded-full shadow-sm transition-all duration-200 flex items-center gap-2"
+      >
+        <span>Book a Free Consultation</span>
+        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+          <path d="M13.025 1l-1.42 1.414 6.586 6.586h-18.191v2h18.191l-6.586 6.586 1.42 1.414 9-9z"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Mobile Menu Toggle Button -->
+    <div class="flex lg:hidden items-center gap-2">
+      <a
+        href="https://wa.me/919876543210"
+        target="_blank"
+        aria-label="Contact on WhatsApp"
+        class="w-10 h-10 rounded-full bg-[#25D366] text-white shadow-xs flex items-center justify-center shrink-0 active:scale-95 transition-transform"
+      >
+        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+          <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/>
+        </svg>
+      </a>
+
+      <button
+        id="mobile-menu-button"
+        type="button"
+        class="w-11 h-11 rounded-full text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#C8102E] flex items-center justify-center active:scale-95 transition-transform"
+        aria-expanded="false"
+        aria-label="Toggle navigation menu"
+      >
+        <svg id="menu-icon-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+        <svg id="menu-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Floating Mobile Menu Drawer -->
+  <div id="mobile-menu" class="hidden lg:hidden mt-3 bg-white/98 backdrop-blur-xl border border-slate-200/90 rounded-3xl p-4 sm:p-5 shadow-2xl space-y-1.5 animate-in fade-in slide-in-from-top-2 duration-200">
+    {navLinks.map((link) => {
+      const isActive = currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href));
+      return (
+        <a
+          href={link.href}
+          class={`flex items-center min-h-[44px] px-4 py-3 rounded-2xl text-xs font-bold tracking-wider uppercase transition-colors ${
+            isActive ? 'bg-red-50 text-[#C8102E]' : 'text-slate-700 hover:bg-slate-50'
+          }`}
+        >
+          {link.name}
+        </a>
+      );
+    })}
+    <div class="pt-3 border-t border-slate-100">
+      <a
+        href="https://wa.me/919876543210?text=Hi%20FlyAustria!%20I%20want%20to%20book%20a%20free%20consultation."
+        target="_blank"
+        rel="noopener noreferrer"
+        class="w-full min-h-[48px] bg-[#0F172A] hover:bg-[#C8102E] text-white text-xs font-bold uppercase tracking-wider justify-center py-3.5 px-5 rounded-full flex items-center gap-2 shadow-sm transition-colors active:scale-[0.99]"
+      >
+        <span>Book a Free Consultation</span>
+        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+          <path d="M13.025 1l-1.42 1.414 6.586 6.586h-18.191v2h18.191l-6.586 6.586 1.42 1.414 9-9z"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Dynamic Scroll Shadow Handler
+  const pill = document.getElementById('header-pill');
+  if (pill) {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        pill.classList.remove('shadow-none');
+        pill.classList.add('shadow-lg', 'shadow-slate-900/10');
+      } else {
+        pill.classList.remove('shadow-lg', 'shadow-slate-900/10');
+        pill.classList.add('shadow-none');
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+  }
+
+  // Mobile Drawer Toggle
+  const btn = document.getElementById('mobile-menu-button');
+  const menu = document.getElementById('mobile-menu');
+  const openIcon = document.getElementById('menu-icon-open');
+  const closeIcon = document.getElementById('menu-icon-close');
+
+  if (btn && menu && openIcon && closeIcon) {
+    btn.addEventListener('click', () => {
+      const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', (!isExpanded).toString());
+      menu.classList.toggle('hidden');
+      openIcon.classList.toggle('hidden');
+      closeIcon.classList.toggle('hidden');
+    });
+  }
+</script>

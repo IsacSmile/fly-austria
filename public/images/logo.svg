@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 50" fill="none">
+  <!-- Crest Icon -->
+  <rect x="2" y="5" width="40" height="40" rx="10" fill="#C8102E"/>
+  <!-- Austrian Alps / Wings Silhouette -->
+  <path d="M12 33L22 17L28 17L38 33H31L25 22L19 33H12Z" fill="white"/>
+  <path d="M20 27H30V30H20V27Z" fill="#D97706"/>
+
+  <!-- Brand Text -->
+  <text x="52" y="27" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="20" fill="#0F172A" letter-spacing="-0.5">FlyAustria</text>
+  <text x="52" y="40" font-family="system-ui, -apple-system, sans-serif" font-weight="600" font-size="9" fill="#C8102E" letter-spacing="1.5">STUDY ABROAD KOCHI</text>
+</svg>

@@ -1,0 +1,423 @@
+---
+export const prerender = false;
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { db, enquiries } from '../../db';
+import { COOKIE_NAME, verifySessionToken } from '../../lib/adminAuth';
+
+const token = Astro.cookies.get(COOKIE_NAME)?.value;
+if (!verifySessionToken(token)) {
+  return Astro.redirect('/admin/login');
+}
+
+// Read query params for filtering
+const url = Astro.url;
+const statusFilter = url.searchParams.get('status') || 'all';
+const sourceFilter = url.searchParams.get('source') || 'all';
+const searchQuery = (url.searchParams.get('search') || '').toLowerCase();
+const selectedId = url.searchParams.get('id');
+
+// Fetch all enquiries
+const allEnquiries = await db.select().from(enquiries);
+
+// Filter logic
+let filteredEnquiries = allEnquiries.filter((e) => {
+  if (statusFilter !== 'all' && e.status !== statusFilter) return false;
+  if (sourceFilter !== 'all' && e.source !== sourceFilter) return false;
+  if (searchQuery) {
+    const nameMatch = e.fullName.toLowerCase().includes(searchQuery);
+    const phoneMatch = e.whatsappNumber.toLowerCase().includes(searchQuery);
+    const emailMatch = (e.email || '').toLowerCase().includes(searchQuery);
+    const qualMatch = (e.highestQualification || '').toLowerCase().includes(searchQuery);
+    if (!nameMatch && !phoneMatch && !emailMatch && !qualMatch) return false;
+  }
+  return true;
+});
+
+// Sort by date descending
+filteredEnquiries.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+// Selected Lead for Detail Slide-Over
+const selectedLead = selectedId ? allEnquiries.find(e => e.id === selectedId) || filteredEnquiries[0] : null;
+
+// Helper badge colors
+const getStatusBadge = (status: string) => {
+  switch (status) {
+    case 'new': return 'bg-amber-100 text-amber-900 border-amber-300';
+    case 'follow_up': return 'bg-purple-100 text-purple-900 border-purple-300';
+    case 'contacted': return 'bg-blue-100 text-blue-900 border-blue-300';
+    case 'in_progress': return 'bg-indigo-100 text-indigo-900 border-indigo-300';
+    case 'converted': return 'bg-emerald-100 text-emerald-900 border-emerald-300';
+    case 'rejected': return 'bg-rose-100 text-rose-900 border-rose-300';
+    case 'closed': return 'bg-slate-200 text-slate-800 border-slate-300';
+    default: return 'bg-slate-100 text-slate-800 border-slate-300';
+  }
+};
+---
+
+<AdminLayout title="Student Lead CRM" subtitle="Manage student enquiries, callbacks, notes & visa files">
+  
+  <!-- Top Controls: Search Bar & Filters -->
+  <div class="bg-white p-5 rounded-3xl border border-slate-200/90 shadow-sm space-y-4">
+    
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      
+      <!-- Search Input Form -->
+      <form method="GET" class="w-full md:w-96 flex items-center gap-2">
+        <input type="hidden" name="status" value={statusFilter} />
+        <input type="hidden" name="source" value={sourceFilter} />
+        <div class="relative w-full">
+          <input
+            type="text"
+            name="search"
+            value={searchQuery}
+            placeholder="Search by student name, phone, email..."
+            class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-[#C8102E] focus:outline-none bg-slate-50"
+          />
+          <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+        <button type="submit" class="py-2.5 px-4 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition-colors">
+          Search
+        </button>
+      </form>
+
+      <!-- Action Buttons: CSV & XLSX Export -->
+      <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+        <a
+          href={`/api/admin/export/csv?status=${statusFilter}&source=${sourceFilter}`}
+          download
+          class="py-2.5 px-4 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 text-xs font-bold transition-colors inline-flex items-center gap-1.5"
+        >
+          <span>📥 Export CSV</span>
+        </a>
+
+        <a
+          href={`/api/admin/export/xlsx?status=${statusFilter}&source=${sourceFilter}`}
+          download
+          class="py-2.5 px-4 rounded-xl bg-blue-50 text-blue-800 border border-blue-200 hover:bg-blue-100 text-xs font-bold transition-colors inline-flex items-center gap-1.5"
+        >
+          <span>📊 Export XLSX</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Status Tabs -->
+    <div class="flex items-center gap-1.5 overflow-x-auto pb-1 border-t border-slate-100 pt-3 text-xs font-bold">
+      {[
+        { id: 'all', label: 'All Leads', count: allEnquiries.length },
+        { id: 'new', label: 'New', count: allEnquiries.filter(e => e.status === 'new').length },
+        { id: 'follow_up', label: 'Follow Up', count: allEnquiries.filter(e => e.status === 'follow_up').length },
+        { id: 'contacted', label: 'Contacted', count: allEnquiries.filter(e => e.status === 'contacted').length },
+        { id: 'in_progress', label: 'In Progress', count: allEnquiries.filter(e => e.status === 'in_progress').length },
+        { id: 'converted', label: 'Converted', count: allEnquiries.filter(e => e.status === 'converted').length },
+        { id: 'rejected', label: 'Rejected', count: allEnquiries.filter(e => e.status === 'rejected').length },
+        { id: 'closed', label: 'Closed', count: allEnquiries.filter(e => e.status === 'closed').length },
+      ].map((tab) => {
+        const isActive = statusFilter === tab.id;
+        return (
+          <a
+            href={`/admin/leads?status=${tab.id}&source=${sourceFilter}${searchQuery ? `&search=${searchQuery}` : ''}`}
+            class={`px-3 py-1.5 rounded-xl transition-all shrink-0 flex items-center gap-1.5 ${
+              isActive
+                ? 'bg-[#C8102E] text-white shadow-xs'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+            }`}
+          >
+            <span>{tab.label}</span>
+            <span class={`px-1.5 py-0.2 rounded-full text-[10px] ${isActive ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'}`}>
+              {tab.count}
+            </span>
+          </a>
+        );
+      })}
+    </div>
+
+  </div>
+
+  <!-- Main CRM Display Area: Table + Side Panel -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    
+    <!-- Table & Card View (8 or 12 cols depending on selected lead panel) -->
+    <div class={selectedLead ? "lg:col-span-7 space-y-4" : "lg:col-span-12 space-y-4"}>
+      
+      <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden">
+        
+        <!-- Desktop Table View -->
+        <div class="hidden md:block overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase text-[10px] tracking-wider">
+                <th class="py-3 px-4">Student</th>
+                <th class="py-3 px-4">WhatsApp / Contact</th>
+                <th class="py-3 px-4">Qualification</th>
+                <th class="py-3 px-4">Target Degree</th>
+                <th class="py-3 px-4">Status</th>
+                <th class="py-3 px-4 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-800 font-medium">
+              {filteredEnquiries.length === 0 ? (
+                <tr>
+                  <td colspan="6" class="py-12 text-center text-slate-400 font-medium">
+                    No student leads match the selected filters.
+                  </td>
+                </tr>
+              ) : (
+                filteredEnquiries.map((lead) => {
+                  const isSelected = selectedLead?.id === lead.id;
+                  return (
+                    <tr class={`transition-colors cursor-pointer ${isSelected ? 'bg-red-50/60' : 'hover:bg-slate-50/80'}`}>
+                      <td class="py-3.5 px-4 font-bold text-slate-900">
+                        <a href={`/admin/leads?id=${lead.id}&status=${statusFilter}&source=${sourceFilter}`} class="hover:text-[#C8102E]">
+                          {lead.fullName}
+                        </a>
+                        <div class="text-[10px] text-slate-400 font-normal">{new Date(lead.createdAt).toLocaleDateString()}</div>
+                      </td>
+                      <td class="py-3.5 px-4">
+                        <a
+                          href={`https://wa.me/${lead.whatsappNumber.replace(/[^0-9]/g, '')}?text=Hi%20${encodeURIComponent(lead.fullName)}!%20This%20is%20FlyAustria%20Kochi.`}
+                          target="_blank"
+                          class="inline-flex items-center gap-1 text-emerald-700 font-bold hover:underline"
+                        >
+                          <span>💬 {lead.whatsappNumber}</span>
+                        </a>
+                      </td>
+                      <td class="py-3.5 px-4 text-slate-600 max-w-[160px] truncate">{lead.highestQualification || 'N/A'}</td>
+                      <td class="py-3.5 px-4 text-slate-600 max-w-[150px] truncate">{lead.targetDegree || 'N/A'}</td>
+                      <td class="py-3.5 px-4">
+                        <span class={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase border ${getStatusBadge(lead.status)}`}>
+                          {lead.status}
+                        </span>
+                      </td>
+                      <td class="py-3.5 px-4 text-right">
+                        <a
+                          href={`/admin/leads?id=${lead.id}&status=${statusFilter}&source=${sourceFilter}`}
+                          class="py-1 px-3 bg-slate-900 hover:bg-[#C8102E] text-white rounded-lg font-bold text-[10px] transition-colors"
+                        >
+                          Inspect
+                        </a>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile Card View -->
+        <div class="md:hidden divide-y divide-slate-100">
+          {filteredEnquiries.map((lead) => (
+            <div class="p-4 space-y-3">
+              <div class="flex items-start justify-between">
+                <div>
+                  <h4 class="font-bold text-slate-900 text-sm">{lead.fullName}</h4>
+                  <p class="text-[10px] text-slate-400">{new Date(lead.createdAt).toLocaleDateString()} • Source: {lead.source}</p>
+                </div>
+                <span class={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase border ${getStatusBadge(lead.status)}`}>
+                  {lead.status}
+                </span>
+              </div>
+              <div class="text-xs text-slate-600 space-y-1">
+                <p><strong>Qual:</strong> {lead.highestQualification || 'N/A'}</p>
+                <p><strong>Degree:</strong> {lead.targetDegree || 'N/A'}</p>
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                <a
+                  href={`https://wa.me/${lead.whatsappNumber.replace(/[^0-9]/g, '')}?text=Hi%20${encodeURIComponent(lead.fullName)}!`}
+                  target="_blank"
+                  class="text-xs font-bold text-emerald-700 flex items-center gap-1"
+                >
+                  💬 WhatsApp
+                </a>
+                <a
+                  href={`/admin/leads?id=${lead.id}`}
+                  class="py-1 px-3 bg-slate-900 text-white text-xs font-bold rounded-lg"
+                >
+                  Open Detail Panel
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Lead Detail Slide-Over / Side Panel (5 cols) -->
+    {selectedLead && (
+      <div class="lg:col-span-5 bg-white p-6 rounded-3xl border border-slate-200/90 shadow-md space-y-6 sticky top-24">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div>
+            <h3 class="text-lg font-extrabold text-[#0F172A] font-serif">{selectedLead.fullName}</h3>
+            <p class="text-xs text-slate-500">Submitted on {new Date(selectedLead.createdAt).toLocaleString()}</p>
+          </div>
+          <a href={`/admin/leads?status=${statusFilter}&source=${sourceFilter}`} class="p-1 rounded-lg text-slate-400 hover:text-slate-800">
+            ✕ Close
+          </a>
+        </div>
+
+        <!-- Direct Action Buttons Row (Official Colors & Icons) -->
+        <div class="grid grid-cols-3 gap-2">
+          <!-- WhatsApp -->
+          <a
+            href={`https://wa.me/${selectedLead.whatsappNumber.replace(/[^0-9]/g, '')}?text=Hi%20${encodeURIComponent(selectedLead.fullName)}!%20This%20is%20Faiz%20from%20FlyAustria%20Kochi.%20I%20reviewed%20your%20eligibility%20for%20Austrian%20Public%20Universities.`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#25D366] hover:bg-[#1DA851] text-white font-bold text-xs transition-colors shadow-xs"
+          >
+            <span>💬 WhatsApp</span>
+          </a>
+
+          <!-- Call -->
+          <a
+            href={`tel:${selectedLead.whatsappNumber}`}
+            class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-bold text-xs transition-colors shadow-xs"
+          >
+            <span>📞 Call</span>
+          </a>
+
+          <!-- Email -->
+          <a
+            href={`mailto:${selectedLead.email || ''}?subject=FlyAustria%20Admissions%20Guidance`}
+            class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#EA4335] hover:bg-[#C5221F] text-white font-bold text-xs transition-colors shadow-xs"
+          >
+            <span>✉️ Email</span>
+          </a>
+        </div>
+
+        <!-- Submitted Fields List -->
+        <div class="bg-[#FAF9F6] p-4 rounded-2xl border border-slate-200/80 space-y-2.5 text-xs">
+          <h4 class="font-bold text-slate-900 border-b border-slate-200/60 pb-1.5 uppercase text-[10px] tracking-wider">
+            Submission Details (7 Captured Fields)
+          </h4>
+          
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <span class="text-[10px] text-slate-400 uppercase font-bold block">WhatsApp</span>
+              <span class="font-bold text-slate-900">{selectedLead.whatsappNumber}</span>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400 uppercase font-bold block">Email</span>
+              <span class="font-bold text-slate-900">{selectedLead.email || 'None'}</span>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400 uppercase font-bold block">Qualification</span>
+              <span class="font-bold text-slate-900">{selectedLead.highestQualification || 'N/A'}</span>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400 uppercase font-bold block">Target Degree</span>
+              <span class="font-bold text-slate-900">{selectedLead.targetDegree || 'N/A'}</span>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400 uppercase font-bold block">Preferred Intake</span>
+              <span class="font-bold text-slate-900">{selectedLead.preferredIntake || 'N/A'}</span>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400 uppercase font-bold block">Source</span>
+              <span class="font-bold text-slate-900 uppercase text-[10px] bg-slate-200 px-1.5 py-0.5 rounded">{selectedLead.source}</span>
+            </div>
+          </div>
+
+          {selectedLead.additionalNotes && (
+            <div class="pt-2 border-t border-slate-200/60">
+              <span class="text-[10px] text-slate-400 uppercase font-bold block">Student Message</span>
+              <p class="text-xs text-slate-700 italic mt-0.5">{selectedLead.additionalNotes}</p>
+            </div>
+          )}
+        </div>
+
+        <!-- Editable Form: Status & Follow-Up Date & Admin Notes -->
+        <form id="crm-update-lead-form" class="space-y-4 pt-2">
+          <input type="hidden" name="leadId" value={selectedLead.id} />
+
+          <!-- Status Select -->
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1">CRM Status</label>
+            <select
+              name="status"
+              class="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-bold bg-white focus:ring-2 focus:ring-[#C8102E]"
+            >
+              <option value="new" selected={selectedLead.status === 'new'}>New Uncontacted</option>
+              <option value="follow_up" selected={selectedLead.status === 'follow_up'}>Follow Up Scheduled</option>
+              <option value="contacted" selected={selectedLead.status === 'contacted'}>Contacted / In Discussion</option>
+              <option value="in_progress" selected={selectedLead.status === 'in_progress'}>In Progress (Application Filed)</option>
+              <option value="converted" selected={selectedLead.status === 'converted'}>Converted (Visa Approved / Enrolled)</option>
+              <option value="rejected" selected={selectedLead.status === 'rejected'}>Rejected / Ineligible</option>
+              <option value="closed" selected={selectedLead.status === 'closed'}>Closed</option>
+            </select>
+          </div>
+
+          <!-- Follow-up Date -->
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1">Scheduled Follow-Up Date</label>
+            <input
+              type="date"
+              name="followUpDate"
+              value={selectedLead.followUpDate || ''}
+              class="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-bold bg-white focus:ring-2 focus:ring-[#C8102E]"
+            />
+          </div>
+
+          <!-- Internal Admin Notes -->
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1">Internal Counselor Notes</label>
+            <textarea
+              name="adminNotes"
+              rows="4"
+              placeholder="Enter internal counseling comments, document status, or callback notes..."
+              class="w-full p-3 rounded-xl border border-slate-200 text-xs font-medium bg-white focus:ring-2 focus:ring-[#C8102E]"
+            >{selectedLead.adminNotes || ''}</textarea>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full py-3 bg-[#C8102E] hover:bg-[#A00C23] text-white font-bold text-xs rounded-xl transition-colors shadow-md cursor-pointer"
+          >
+            Save Lead Status & Notes
+          </button>
+        </form>
+
+      </div>
+    )}
+
+  </div>
+
+</AdminLayout>
+
+<script>
+  // Handle Lead Update submission via fetch
+  document.getElementById('crm-update-lead-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    const payload = {
+      leadId: formData.get('leadId'),
+      status: formData.get('status'),
+      followUpDate: formData.get('followUpDate'),
+      adminNotes: formData.get('adminNotes'),
+    };
+
+    try {
+      const res = await fetch('/api/admin/enquiries/update-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        alert('✅ Lead status and internal notes updated successfully!');
+        window.location.reload();
+      } else {
+        alert('❌ Failed to update lead status.');
+      }
+    } catch (err) {
+      alert('❌ Error updating lead status.');
+    }
+  });
+</script>

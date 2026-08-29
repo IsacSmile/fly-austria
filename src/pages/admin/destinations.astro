@@ -1,0 +1,202 @@
+---
+export const prerender = false;
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { db, universities } from '../../db';
+import { COOKIE_NAME, verifySessionToken } from '../../lib/adminAuth';
+
+const token = Astro.cookies.get(COOKIE_NAME)?.value;
+if (!verifySessionToken(token)) {
+  return Astro.redirect('/admin/login');
+}
+
+let allUniversities = [];
+try {
+  allUniversities = await db.select().from(universities);
+} catch (err) {
+  allUniversities = [];
+}
+---
+
+<AdminLayout title="Destinations & Universities Manager" subtitle="Manage top Austrian public universities & program options">
+  
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    
+    <!-- Add University Form (4 cols) -->
+    <div class="lg:col-span-4 bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm space-y-4">
+      <h3 class="text-base font-extrabold text-[#0F172A] font-serif border-b border-slate-100 pb-3">
+        Add Public University
+      </h3>
+
+      <form id="create-university-form" class="space-y-3.5 text-xs">
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">University Name (English)</label>
+          <input
+            type="text"
+            name="name"
+            placeholder="e.g. University of Vienna"
+            class="w-full p-2.5 rounded-xl border border-slate-200 font-medium bg-slate-50 focus:ring-2 focus:ring-[#C8102E]"
+            required
+          />
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">German Name</label>
+          <input
+            type="text"
+            name="germanName"
+            placeholder="Universität Wien"
+            class="w-full p-2.5 rounded-xl border border-slate-200 font-medium bg-white focus:ring-2 focus:ring-[#C8102E]"
+            required
+          />
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">City</label>
+            <input
+              type="text"
+              name="city"
+              placeholder="Vienna / Graz / Linz"
+              class="w-full p-2.5 rounded-xl border border-slate-200 font-medium bg-white focus:ring-2 focus:ring-[#C8102E]"
+              required
+            />
+          </div>
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Tuition Fee</label>
+            <input
+              type="text"
+              name="tuitionFee"
+              defaultValue="€726.72 / sem"
+              class="w-full p-2.5 rounded-xl border border-slate-200 font-bold bg-white focus:ring-2 focus:ring-[#C8102E]"
+              required
+            />
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">QS / World Ranking</label>
+          <input
+            type="text"
+            name="ranking"
+            placeholder="QS #137 Global Rank"
+            class="w-full p-2.5 rounded-xl border border-slate-200 font-medium bg-white focus:ring-2 focus:ring-[#C8102E]"
+          />
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">Popular English Courses</label>
+          <input
+            type="text"
+            name="popularCourses"
+            placeholder="M.Sc Computer Science, M.Sc Data Science, MBA"
+            class="w-full p-2.5 rounded-xl border border-slate-200 font-medium bg-white focus:ring-2 focus:ring-[#C8102E]"
+          />
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">Image URL</label>
+          <input
+            type="text"
+            name="imageUrl"
+            placeholder="https://images.unsplash.com/..."
+            class="w-full p-2.5 rounded-xl border border-slate-200 font-medium bg-white focus:ring-2 focus:ring-[#C8102E]"
+          />
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">Short Description</label>
+          <textarea
+            name="description"
+            rows="2"
+            placeholder="Description for university card..."
+            class="w-full p-2.5 rounded-xl border border-slate-200 font-medium bg-white focus:ring-2 focus:ring-[#C8102E]"
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full py-3 bg-[#0F172A] hover:bg-[#C8102E] text-white font-bold rounded-xl transition-colors shadow-md cursor-pointer"
+        >
+          Save Public University
+        </button>
+      </form>
+    </div>
+
+    <!-- Active University Grid (8 cols) -->
+    <div class="lg:col-span-8 bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div>
+          <h3 class="text-base font-extrabold text-[#0F172A] font-serif">Public Universities Directory</h3>
+          <p class="text-xs text-slate-500">Listed public campuses in Austria</p>
+        </div>
+        <span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 font-bold text-[10px]">
+          {allUniversities.length} Institutions
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {allUniversities.map((univ) => (
+          <div class="p-5 rounded-2xl bg-[#FAF9F6] border border-slate-200/80 space-y-3 relative">
+            <div class="flex items-start justify-between">
+              <div>
+                <span class="text-[10px] font-extrabold text-[#C8102E] uppercase tracking-wider">{univ.city}</span>
+                <h4 class="font-bold text-slate-900 text-sm leading-snug">{univ.name}</h4>
+                <p class="text-[11px] text-slate-500 italic">{univ.germanName}</p>
+              </div>
+              <span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold text-[10px] border border-emerald-200 shrink-0">
+                {univ.tuitionFee}
+              </span>
+            </div>
+
+            <p class="text-xs text-slate-600 line-clamp-2">{univ.description}</p>
+
+            <div class="pt-2 border-t border-slate-200/60 flex items-center justify-between text-[11px]">
+              <span class="font-bold text-slate-700">{univ.ranking}</span>
+              <span class="text-slate-500 truncate max-w-[150px]">{univ.popularCourses}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+
+  </div>
+
+</AdminLayout>
+
+<script>
+  document.getElementById('create-university-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    const payload = {
+      name: formData.get('name'),
+      germanName: formData.get('germanName'),
+      city: formData.get('city'),
+      tuitionFee: formData.get('tuitionFee'),
+      ranking: formData.get('ranking'),
+      popularCourses: formData.get('popularCourses'),
+      imageUrl: formData.get('imageUrl') || 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963',
+      description: formData.get('description'),
+      websiteUrl: 'https://univie.ac.at',
+    };
+
+    try {
+      const res = await fetch('/api/admin/destinations/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        alert('✅ Public University saved successfully!');
+        window.location.reload();
+      } else {
+        alert('❌ Failed to save university.');
+      }
+    } catch (err) {
+      alert('❌ Error saving university.');
+    }
+  });
+</script>

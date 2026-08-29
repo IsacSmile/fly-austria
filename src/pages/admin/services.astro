@@ -1,0 +1,173 @@
+---
+export const prerender = false;
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { db, services } from '../../db';
+import { COOKIE_NAME, verifySessionToken } from '../../lib/adminAuth';
+
+const token = Astro.cookies.get(COOKIE_NAME)?.value;
+if (!verifySessionToken(token)) {
+  return Astro.redirect('/admin/login');
+}
+
+let allServices = [];
+try {
+  allServices = await db.select().from(services);
+} catch (err) {
+  allServices = [];
+}
+---
+
+<AdminLayout title="Services Manager" subtitle="Manage public core offerings & highlights">
+  
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    
+    <!-- Add New Service Form (4 cols) -->
+    <div class="lg:col-span-4 bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm space-y-4">
+      <h3 class="text-base font-extrabold text-[#0F172A] font-serif border-b border-slate-100 pb-3">
+        Add New Service
+      </h3>
+
+      <form id="create-service-form" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">Service Title</label>
+          <input
+            type="text"
+            name="title"
+            placeholder="e.g. Public University Admissions Guidance"
+            class="w-full p-2.5 rounded-xl border border-slate-200 font-medium bg-slate-50 focus:ring-2 focus:ring-[#C8102E]"
+            required
+          />
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">Short Description</label>
+          <textarea
+            name="description"
+            rows="3"
+            placeholder="Short summary of what is provided to Kerala students..."
+            class="w-full p-2.5 rounded-xl border border-slate-200 font-medium bg-white focus:ring-2 focus:ring-[#C8102E]"
+            required
+          ></textarea>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">Key Highlights (Comma Separated)</label>
+          <input
+            type="text"
+            name="highlights"
+            placeholder="Attestation in Trivandrum, MEA Apostille in Delhi, German translations"
+            class="w-full p-2.5 rounded-xl border border-slate-200 font-medium bg-white focus:ring-2 focus:ring-[#C8102E]"
+          />
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">Icon Emoji / Symbol</label>
+          <input
+            type="text"
+            name="icon"
+            defaultValue="🏛️"
+            class="w-full p-2.5 rounded-xl border border-slate-200 font-bold bg-white focus:ring-2 focus:ring-[#C8102E]"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="w-full py-3 bg-[#0F172A] hover:bg-[#C8102E] text-white font-bold rounded-xl transition-colors shadow-md cursor-pointer"
+        >
+          Publish Service Offering
+        </button>
+      </form>
+    </div>
+
+    <!-- Active Services Grid (8 cols) -->
+    <div class="lg:col-span-8 bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div>
+          <h3 class="text-base font-extrabold text-[#0F172A] font-serif">Active Public Services</h3>
+          <p class="text-xs text-slate-500">Live offerings displayed on /services</p>
+        </div>
+        <span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 font-bold text-[10px]">
+          {allServices.length} Offerings
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {allServices.map((srv) => {
+          let highlightsList = [];
+          try {
+            highlightsList = JSON.parse(srv.highlights || '[]');
+          } catch (e) {
+            highlightsList = [srv.highlights];
+          }
+
+          return (
+            <div class="p-5 rounded-2xl bg-[#FAF9F6] border border-slate-200/80 space-y-3 relative group">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl p-2 rounded-xl bg-white border border-slate-200 shadow-2xs">{srv.icon || '🏛️'}</span>
+                <div>
+                  <h4 class="font-bold text-slate-900 text-sm">{srv.title}</h4>
+                  <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    Active
+                  </span>
+                </div>
+              </div>
+
+              <p class="text-xs text-slate-600 leading-relaxed">{srv.description}</p>
+
+              {highlightsList.length > 0 && (
+                <div class="space-y-1 pt-2 border-t border-slate-200/60 text-[11px]">
+                  {highlightsList.map((h: string) => (
+                    <div class="flex items-center gap-1.5 text-slate-700">
+                      <span class="text-[#C8102E] font-bold">✓</span>
+                      <span>{h}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+    </div>
+
+  </div>
+
+</AdminLayout>
+
+<script>
+  document.getElementById('create-service-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    const highlightsArr = (formData.get('highlights') as string)
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    const payload = {
+      title: formData.get('title'),
+      description: formData.get('description'),
+      highlights: JSON.stringify(highlightsArr),
+      icon: formData.get('icon') || '🏛️',
+    };
+
+    try {
+      const res = await fetch('/api/admin/services/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        alert('✅ Service published successfully!');
+        window.location.reload();
+      } else {
+        alert('❌ Failed to publish service.');
+      }
+    } catch (err) {
+      alert('❌ Error publishing service.');
+    }
+  });
+</script>

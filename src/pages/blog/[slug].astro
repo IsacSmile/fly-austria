@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<BaseLayout
+  title={`${post.data.title} | FlyAustria Study Abroad`}
+  description={post.data.description}
+>
+  <article class="py-16 sm:py-20 max-w-4xl mx-auto px-4 sm:px-6">
+    <div class="mb-10 space-y-4 text-center sm:text-left">
+      <div class="flex items-center gap-3 justify-center sm:justify-start text-xs text-slate-500">
+        <span class="font-bold text-[#C8102E] bg-red-50 px-3 py-1 rounded-full border border-red-100">{post.data.category}</span>
+        <span>•</span>
+        <time>{post.data.pubDate}</time>
+        <span>•</span>
+        <span>By {post.data.author}</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl font-extrabold text-[#0F172A] tracking-tight leading-tight">
+        {post.data.title}
+      </h1>
+      
+      <p class="text-base text-slate-600 leading-relaxed border-l-4 border-[#C8102E] pl-4 italic">
+        {post.data.description}
+      </p>
+    </div>
+
+    <!-- Article Prose Content -->
+    <div class="prose prose-slate max-w-none prose-headings:font-bold prose-headings:text-[#0F172A] prose-a:text-[#C8102E] prose-[#C8102E] bg-white p-8 sm:p-12 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+      <Content />
+    </div>
+
+    <!-- Contextual WhatsApp CTA -->
+    <div class="mt-12 p-8 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-3xl text-center space-y-4">
+      <h3 class="text-xl font-bold">Have Questions About Studying in Austria?</h3>
+      <p class="text-xs text-slate-300 max-w-md mx-auto">
+        Speak directly with our Kochi consultants to check your university eligibility and document requirements.
+      </p>
+      <a
+        href={`https://wa.me/919876543210?text=Hi%20FlyAustria!%20I%20read%20your%20article%20"${encodeURIComponent(post.data.title)}"%20and%20want%20more%20information.`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-whatsapp py-3 px-6 text-xs font-bold rounded-xl inline-flex"
+      >
+        Ask an Expert on WhatsApp
+      </a>
+    </div>
+  </article>
+</BaseLayout>

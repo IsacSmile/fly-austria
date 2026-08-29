@@ -1,0 +1,142 @@
+---
+interface HighlightItem {
+  icon: string;
+  title: string;
+  subtitle: string;
+}
+
+interface Props {
+  badgeText?: string;
+  titlePrefix?: string;
+  titleHighlight?: string;
+  titleSuffix?: string;
+  subtitle?: string;
+  description?: string;
+  primaryCtaText?: string;
+  primaryCtaLink?: string;
+  secondaryCtaText?: string;
+  secondaryCtaLink?: string;
+  highlightsTitle?: string;
+  highlightsBadge?: string;
+  highlights?: HighlightItem[];
+}
+
+const {
+  badgeText = "GLOBAL ADMISSIONS & VISA CONSULTANCY",
+  titlePrefix = "Aspiring to study in another country?",
+  titleHighlight = "We'll guide you",
+  titleSuffix = "every step of the journey!",
+  subtitle = "Equipping future leaders to learn globally and thrive personally",
+  description = "At FlyAustria Consultancy, we specialize in helping Kerala students achieve their academic goals by securing admission to top public universities in Austria and Germany.",
+  primaryCtaText = "BOOK FREE CONSULTATION",
+  primaryCtaLink = "/#contact-section",
+  secondaryCtaText = "INSTAGRAM",
+  secondaryCtaLink = "https://instagram.com",
+  highlightsTitle = "FLYAUSTRIA HIGHLIGHTS",
+  highlightsBadge = "VERIFIED",
+  highlights = [
+    { icon: "🇦🇹", title: "Austria Flagship", subtitle: "Vienna, Graz, Salzburg" },
+    { icon: "🇩🇪", title: "Public Unis", subtitle: "Germany & Austria" },
+    { icon: "🎓", title: "100% Guidance", subtitle: "Course & Portal Prep" },
+    { icon: "🛡️", title: "Visa & Housing", subtitle: "Permit & Dorm Support" }
+  ]
+} = Astro.props;
+---
+
+<section class="py-6 sm:py-10 bg-[#FAF9F6]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white rounded-3xl border border-slate-200/90 shadow-xl shadow-slate-900/5 p-6 sm:p-10 lg:p-12 relative overflow-hidden">
+      
+      <div class="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12">
+        
+        <!-- Left Content -->
+        <div class="flex-1 text-left space-y-4 sm:space-y-5">
+          
+          <!-- Top Badge -->
+          <div>
+            <span class="inline-flex max-w-full items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0F172A] text-white text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider shadow-xs whitespace-normal text-left">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#C8102E] animate-pulse shrink-0"></span>
+              <span class="truncate sm:whitespace-normal">{badgeText}</span>
+            </span>
+          </div>
+
+          <!-- Main Title -->
+          <h1 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-[#0F172A] font-serif leading-[1.2] tracking-tight">
+            {titlePrefix && `${titlePrefix} `}
+            {titleHighlight && <span class="text-[#C8102E] italic underline decoration-[#C8102E]/20 decoration-wavy underline-offset-4">{titleHighlight}</span>}
+            {titleSuffix && ` ${titleSuffix}`}
+          </h1>
+
+          <!-- Subtitle -->
+          {subtitle && (
+            <p class="text-xs sm:text-base font-serif text-slate-700 italic font-medium">
+              {subtitle}
+            </p>
+          )}
+
+          <!-- Description Paragraph -->
+          {description && (
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-2xl font-sans">
+              {description}
+            </p>
+          )}
+
+          <!-- CTA Buttons Row -->
+          <div class="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full">
+            <a
+              href={primaryCtaLink}
+              class="btn-primary w-full sm:w-auto inline-flex items-center justify-center min-h-[48px] gap-2 py-3.5 px-6 text-xs font-bold uppercase tracking-wider rounded-full shadow-md transition-transform active:scale-95 cursor-pointer"
+            >
+              <span>{primaryCtaText}</span>
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M13.025 1l-1.42 1.414 6.586 6.586h-18.191v2h18.191l-6.586 6.586 1.42 1.414 9-9z"/>
+              </svg>
+            </a>
+
+            <a
+              href={secondaryCtaLink}
+              target={secondaryCtaLink.startsWith('http') ? "_blank" : "_self"}
+              rel="noopener noreferrer"
+              class="w-full sm:w-auto inline-flex items-center justify-center min-h-[48px] gap-2 py-3.5 px-5 text-xs font-bold uppercase tracking-wider rounded-full bg-red-50 text-[#C8102E] border border-red-200/80 hover:bg-red-100 transition-colors shadow-2xs cursor-pointer active:scale-95"
+            >
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+              <span>{secondaryCtaText}</span>
+            </a>
+          </div>
+
+        </div>
+
+        <!-- Right Side Highlight Card Widget -->
+        <div class="w-full lg:w-[380px] xl:w-[420px] bg-[#FDFBF7] rounded-3xl border border-slate-200/90 p-5 sm:p-6 shadow-sm space-y-4 shrink-0">
+          
+          <!-- Widget Header -->
+          <div class="flex items-center justify-between border-b border-slate-200/60 pb-3">
+            <div class="flex items-center gap-2 text-[11px] font-extrabold text-slate-800 uppercase tracking-wider">
+              <span class="w-2 h-2 rounded-full bg-[#C8102E]"></span>
+              <span>{highlightsTitle}</span>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold tracking-wider uppercase">
+              {highlightsBadge}
+            </span>
+          </div>
+
+          <!-- 2x2 Highlights Grid -->
+          <div class="grid grid-cols-2 gap-3">
+            {highlights.map((item) => (
+              <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-2xs hover:border-[#C8102E]/30 transition-all space-y-1">
+                <div class="text-xl mb-1">{item.icon}</div>
+                <h4 class="font-extrabold text-slate-900 text-xs tracking-tight">{item.title}</h4>
+                <p class="text-[10px] text-slate-500 font-medium leading-tight">{item.subtitle}</p>
+              </div>
+            ))}
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>

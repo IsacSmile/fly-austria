@@ -1,0 +1,155 @@
+---
+export const prerender = false;
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { db, settings } from '../../db';
+import { COOKIE_NAME, verifySessionToken } from '../../lib/adminAuth';
+
+const token = Astro.cookies.get(COOKIE_NAME)?.value;
+if (!verifySessionToken(token)) {
+  return Astro.redirect('/admin/login');
+}
+
+let allSettings = [];
+try {
+  allSettings = await db.select().from(settings);
+} catch (err) {
+  allSettings = [];
+}
+
+const getSetting = (key: string, defaultVal: string) => {
+  const found = allSettings.find(s => s.key === key);
+  return found ? found.value : defaultVal;
+};
+---
+
+<AdminLayout title="Platform & Homepage Settings" subtitle="Configure global site copy, contact numbers & trust metrics">
+  
+  <div class="max-w-4xl mx-auto bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/90 shadow-sm space-y-6">
+    
+    <div class="border-b border-slate-100 pb-4">
+      <h3 class="text-lg font-extrabold text-[#0F172A] font-serif">Global Configuration</h3>
+      <p class="text-xs text-slate-500">Update key marketing headlines, contact numbers, and office addresses</p>
+    </div>
+
+    <form id="save-settings-form" class="space-y-6 text-xs">
+      
+      <!-- Section 1: Hero Headlines -->
+      <div class="space-y-4 bg-[#FAF9F6] p-5 rounded-2xl border border-slate-200/80">
+        <h4 class="font-extrabold text-[#0F172A] text-sm uppercase tracking-wider">1. Hero & Banner Copy</h4>
+        
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">Hero Main Headline</label>
+          <input
+            type="text"
+            name="hero_headline"
+            value={getSetting('hero_headline', 'Kerala\'s Exclusive Gateway to Austrian Public Universities')}
+            class="w-full p-2.5 rounded-xl border border-slate-200 font-bold bg-white focus:ring-2 focus:ring-[#C8102E]"
+          />
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">Hero Subheadline</label>
+          <textarea
+            name="hero_subheadline"
+            rows="2"
+            class="w-full p-2.5 rounded-xl border border-slate-200 font-medium bg-white focus:ring-2 focus:ring-[#C8102E]"
+          >{getSetting('hero_subheadline', 'Study in Vienna, Graz, or Linz with €726/semester tuition and 100% transparent admission & visa support from Kochi.')}</textarea>
+        </div>
+      </div>
+
+      <!-- Section 2: Contact & Social Handles -->
+      <div class="space-y-4 bg-[#FAF9F6] p-5 rounded-2xl border border-slate-200/80">
+        <h4 class="font-extrabold text-[#0F172A] text-sm uppercase tracking-wider">2. Contact Channels</h4>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Official WhatsApp Number</label>
+            <input
+              type="text"
+              name="whatsapp_number"
+              value={getSetting('whatsapp_number', '+919876543210')}
+              class="w-full p-2.5 rounded-xl border border-slate-200 font-bold bg-white focus:ring-2 focus:ring-[#C8102E]"
+            />
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Official Email</label>
+            <input
+              type="text"
+              name="official_email"
+              value={getSetting('official_email', 'info@flyaustria.in')}
+              class="w-full p-2.5 rounded-xl border border-slate-200 font-bold bg-white focus:ring-2 focus:ring-[#C8102E]"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Trust Metrics -->
+      <div class="space-y-4 bg-[#FAF9F6] p-5 rounded-2xl border border-slate-200/80">
+        <h4 class="font-extrabold text-[#0F172A] text-sm uppercase tracking-wider">3. Trust Statistics</h4>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Visa Success Rate</label>
+            <input
+              type="text"
+              name="trust_visa_rate"
+              value={getSetting('trust_visa_rate', '99.2%')}
+              class="w-full p-2.5 rounded-xl border border-slate-200 font-bold bg-white focus:ring-2 focus:ring-[#C8102E]"
+            />
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-800 mb-1">Total Students Placed</label>
+            <input
+              type="text"
+              name="trust_students_count"
+              value={getSetting('trust_students_count', '450+')}
+              class="w-full p-2.5 rounded-xl border border-slate-200 font-bold bg-white focus:ring-2 focus:ring-[#C8102E]"
+            />
+          </div>
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="w-full py-3 bg-[#C8102E] hover:bg-[#A00C23] text-white font-bold text-xs rounded-xl transition-colors shadow-md cursor-pointer"
+      >
+        Save Platform Settings
+      </button>
+
+    </form>
+
+  </div>
+
+</AdminLayout>
+
+<script>
+  document.getElementById('save-settings-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    const payload: Record<string, string> = {};
+    formData.forEach((val, key) => {
+      payload[key] = val as string;
+    });
+
+    try {
+      const res = await fetch('/api/admin/settings/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        alert('✅ Settings saved successfully!');
+        window.location.reload();
+      } else {
+        alert('❌ Failed to save settings.');
+      }
+    } catch (err) {
+      alert('❌ Error saving settings.');
+    }
+  });
+</script>

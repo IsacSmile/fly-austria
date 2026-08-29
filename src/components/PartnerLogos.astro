@@ -1,0 +1,32 @@
+---
+const partnerUniversities = [
+  { name: 'University of Vienna', location: 'Vienna', rank: '#1 Austria' },
+  { name: 'TU Wien', location: 'Vienna', rank: 'Top Tech Uni' },
+  { name: 'TU Graz', location: 'Graz', rank: 'Engineering Hub' },
+  { name: 'University of Graz', location: 'Graz', rank: 'Est. 1585' },
+  { name: 'JKU Linz', location: 'Linz', rank: 'AI & Business' },
+  { name: 'University of Innsbruck', location: 'Innsbruck', rank: 'Top 200 World' },
+];
+---
+
+<section class="py-12 bg-white border-y border-slate-200/80">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+    <p class="text-xs font-extrabold uppercase tracking-widest text-slate-500">
+      Admissions & Guidance for Austria’s Premier Public Universities
+    </p>
+
+    <!-- University Muted Grid Badges -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+      {partnerUniversities.map((uni) => (
+        <div class="p-3.5 rounded-2xl bg-[#FAF9F6] border border-slate-200/90 hover:border-red-300 transition-all text-center space-y-0.5 group shadow-2xs">
+          <div class="text-xs font-extrabold text-slate-800 group-hover:text-[#C8102E] transition-colors font-serif">
+            {uni.name}
+          </div>
+          <div class="text-[10px] font-bold text-slate-500">
+            {uni.location} • <span class="text-emerald-700">{uni.rank}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

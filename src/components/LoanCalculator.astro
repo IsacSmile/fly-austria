@@ -1,0 +1,273 @@
+---
+---
+
+<section class="py-20 sm:py-28 bg-white border-y border-slate-200/90" id="loan-calculator">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Section Header -->
+    <div class="text-center max-w-3xl mx-auto mb-14">
+      <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-3">
+        <span>Financial Transparency</span>
+      </span>
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0F172A] tracking-tight font-serif">
+        Austria Education Loan & Cost Calculator
+      </h2>
+      <p class="text-slate-600 text-sm sm:text-base mt-3 leading-relaxed">
+        With zero public university tuition fees in Austria (€726/sem admin fee), your total budget is primarily living expense proof. Estimate your monthly EMI & total funding requirements instantly.
+      </p>
+    </div>
+
+    <!-- Calculator Card Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start bg-[#FAF9F6] border border-slate-200/90 rounded-3xl p-5 sm:p-10 shadow-lg shadow-slate-900/5">
+      
+      <!-- Left Inputs Form -->
+      <div class="lg:col-span-7 space-y-6">
+        <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 font-serif border-b border-slate-200 pb-3 flex items-center gap-2">
+          <span>🧮</span>
+          <span>Customize Loan Parameters</span>
+        </h3>
+
+        <!-- Input 1: Total Program Expenses -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between text-xs sm:text-sm font-bold text-slate-800 flex-wrap gap-1">
+            <label for="loan-total-cost">Total 2-Year Budget (Living + Fees)</label>
+            <span id="total-cost-val" class="text-[#C8102E] font-mono text-base font-extrabold">₹7,00,000</span>
+          </div>
+          <div class="py-2">
+            <input
+              type="range"
+              id="loan-total-cost"
+              min="300000"
+              max="1500000"
+              step="50000"
+              value="700000"
+              class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#C8102E] touch-pan-y"
+            />
+          </div>
+          <div class="flex justify-between text-[11px] text-slate-400 font-medium">
+            <span>₹3 Lakhs</span>
+            <span>₹7.5 Lakhs</span>
+            <span>₹15 Lakhs</span>
+          </div>
+        </div>
+
+        <!-- Input 2: Self Contribution / Down Payment % -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between text-xs sm:text-sm font-bold text-slate-800 flex-wrap gap-1">
+            <label for="loan-downpayment">Self Funding / Savings Contribution (%)</label>
+            <span id="downpayment-val" class="text-slate-900 font-mono text-sm">20% (₹1,40,000)</span>
+          </div>
+          <div class="py-2">
+            <input
+              type="range"
+              id="loan-downpayment"
+              min="0"
+              max="50"
+              step="5"
+              value="20"
+              class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#C8102E] touch-pan-y"
+            />
+          </div>
+          <div class="flex justify-between text-[11px] text-slate-400 font-medium">
+            <span>0% (Full Loan)</span>
+            <span>25%</span>
+            <span>50%</span>
+          </div>
+        </div>
+
+        <!-- Input 3: Loan Tenure -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between text-xs sm:text-sm font-bold text-slate-800 flex-wrap gap-1">
+            <label for="loan-tenure">Repayment Tenure (Years)</label>
+            <span id="tenure-val" class="text-slate-900 font-mono text-sm">5 Years (60 Mos)</span>
+          </div>
+          <div class="py-2">
+            <input
+              type="range"
+              id="loan-tenure"
+              min="1"
+              max="10"
+              step="1"
+              value="5"
+              class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#C8102E] touch-pan-y"
+            />
+          </div>
+          <div class="flex justify-between text-[11px] text-slate-400 font-medium">
+            <span>1 Year</span>
+            <span>5 Years</span>
+            <span>10 Years</span>
+          </div>
+        </div>
+
+        <!-- Input 4: Interest Rate -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between text-xs sm:text-sm font-bold text-slate-800 flex-wrap gap-1">
+            <label for="loan-interest">Education Loan Interest Rate (% p.a.)</label>
+            <span id="interest-val" class="text-slate-900 font-mono text-sm">10.5% p.a.</span>
+          </div>
+          <div class="py-2">
+            <input
+              type="range"
+              id="loan-interest"
+              min="8.5"
+              max="14.5"
+              step="0.25"
+              value="10.5"
+              class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#C8102E] touch-pan-y"
+            />
+          </div>
+          <div class="flex justify-between text-[11px] text-slate-400 font-medium">
+            <span>8.5% (Govt)</span>
+            <span>10.5% (Std)</span>
+            <span>14.5% (NBFC)</span>
+          </div>
+        </div>
+
+        <!-- Austria Key Advantage Callout -->
+        <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200/80 flex items-start gap-3">
+          <span class="text-emerald-700 text-lg">💡</span>
+          <p class="text-xs text-emerald-900 leading-relaxed font-medium">
+            <strong>No Blocked Account Needed:</strong> Unlike Germany (€11,904 locked in Sperrkonto), Austria permits showing liquid funds in standard Indian savings accounts or education loan sanction letters!
+          </p>
+        </div>
+      </div>
+
+      <!-- Right Calculation Results Card -->
+      <div class="lg:col-span-5 bg-[#0F172A] text-white p-5 sm:p-8 rounded-2xl shadow-xl space-y-6">
+        <h4 class="text-xs font-extrabold uppercase tracking-widest text-slate-400 border-b border-slate-800 pb-3">
+          Estimated Monthly Repayment Summary
+        </h4>
+
+        <!-- Big EMI Result -->
+        <div class="space-y-1">
+          <span class="text-xs text-slate-400 uppercase font-semibold tracking-wider">Estimated Monthly EMI</span>
+          <div id="result-emi" class="text-2xl sm:text-4xl font-extrabold font-mono text-emerald-400">
+            ₹12,042 / mo
+          </div>
+          <p class="text-[11px] text-slate-400">Calculated based on selected tenure & interest rate.</p>
+        </div>
+
+        <!-- Breakdown Grid -->
+        <div class="grid grid-cols-2 gap-3 sm:gap-4 border-t border-b border-slate-800 py-4 text-xs">
+          <div>
+            <span class="text-slate-400 block mb-0.5">Required Loan</span>
+            <span id="result-loan-amount" class="font-extrabold text-white font-mono text-sm">₹5,60,000</span>
+          </div>
+
+          <div>
+            <span class="text-slate-400 block mb-0.5">Self Funding</span>
+            <span id="result-downpayment" class="font-extrabold text-white font-mono text-sm">₹1,40,000</span>
+          </div>
+
+          <div>
+            <span class="text-slate-400 block mb-0.5">Total Interest</span>
+            <span id="result-total-interest" class="font-extrabold text-[#C8102E] font-mono text-sm">₹1,62,520</span>
+          </div>
+
+          <div>
+            <span class="text-slate-400 block mb-0.5">Total Payable</span>
+            <span id="result-total-payable" class="font-extrabold text-white font-mono text-sm">₹7,22,520</span>
+          </div>
+        </div>
+
+        <!-- WhatsApp Loan Consultation Button -->
+        <div class="space-y-2 pt-1">
+          <a
+            id="whatsapp-loan-btn"
+            href="https://wa.me/919876543210?text=Hi%20FlyAustria!%20I%20calculated%20an%20estimated%20loan%20of%20₹5,60,000%20for%20studying%20in%20Austria.%20Please%20guide%20me%20on%20education%20loan%20options."
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-full min-h-[48px] bg-[#C8102E] hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider py-3.5 px-5 rounded-full flex items-center justify-center gap-2 shadow-md transition-all text-center active:scale-95"
+          >
+            <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
+              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/>
+            </svg>
+            <span>Get Personalized Loan Guidance</span>
+          </a>
+
+          <p class="text-[10px] text-center text-slate-400">
+            *Indicative estimates. Bank processing fees & floating rates may vary.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<script>
+  function formatINR(val) {
+    return '₹' + Math.round(val).toLocaleString('en-IN');
+  }
+
+  function calculateEMI() {
+    const totalCostInput = document.getElementById('loan-total-cost') as HTMLInputElement;
+    const downpaymentInput = document.getElementById('loan-downpayment') as HTMLInputElement;
+    const tenureInput = document.getElementById('loan-tenure') as HTMLInputElement;
+    const interestInput = document.getElementById('loan-interest') as HTMLInputElement;
+
+    if (!totalCostInput || !downpaymentInput || !tenureInput || !interestInput) return;
+
+    const totalCost = parseFloat(totalCostInput.value);
+    const downpaymentPct = parseFloat(downpaymentInput.value);
+    const tenureYears = parseFloat(tenureInput.value);
+    const annualRate = parseFloat(interestInput.value);
+
+    const downpaymentAmt = totalCost * (downpaymentPct / 100);
+    const loanAmount = totalCost - downpaymentAmt;
+    const monthlyRate = annualRate / 12 / 100;
+    const totalMonths = tenureYears * 12;
+
+    let emi = 0;
+    if (monthlyRate > 0) {
+      emi = (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / (Math.pow(1 + monthlyRate, totalMonths) - 1);
+    } else {
+      emi = loanAmount / totalMonths;
+    }
+
+    const totalPayable = emi * totalMonths;
+    const totalInterest = totalPayable - loanAmount;
+
+    // Update labels
+    const totalCostVal = document.getElementById('total-cost-val');
+    const downpaymentVal = document.getElementById('downpayment-val');
+    const tenureVal = document.getElementById('tenure-val');
+    const interestVal = document.getElementById('interest-val');
+
+    if (totalCostVal) totalCostVal.textContent = formatINR(totalCost);
+    if (downpaymentVal) downpaymentVal.textContent = `${downpaymentPct}% (${formatINR(downpaymentAmt)})`;
+    if (tenureVal) tenureVal.textContent = `${tenureYears} ${tenureYears === 1 ? 'Year' : 'Years'} (${totalMonths} Mos)`;
+    if (interestVal) interestVal.textContent = `${annualRate}% p.a.`;
+
+    // Update results
+    const resultEmi = document.getElementById('result-emi');
+    const resultLoanAmount = document.getElementById('result-loan-amount');
+    const resultDownpayment = document.getElementById('result-downpayment');
+    const resultTotalInterest = document.getElementById('result-total-interest');
+    const resultTotalPayable = document.getElementById('result-total-payable');
+    const whatsappBtn = document.getElementById('whatsapp-loan-btn') as HTMLAnchorElement;
+
+    if (resultEmi) resultEmi.textContent = formatINR(emi) + ' / mo';
+    if (resultLoanAmount) resultLoanAmount.textContent = formatINR(loanAmount);
+    if (resultDownpayment) resultDownpayment.textContent = formatINR(downpaymentAmt);
+    if (resultTotalInterest) resultTotalInterest.textContent = formatINR(totalInterest);
+    if (resultTotalPayable) resultTotalPayable.textContent = formatINR(totalPayable);
+
+    if (whatsappBtn) {
+      const msg = `Hi FlyAustria! I calculated an estimated loan of ${formatINR(loanAmount)} for studying in Austria. Please guide me on education loan options.`;
+      whatsappBtn.href = `https://wa.me/919876543210?text=${encodeURIComponent(msg)}`;
+    }
+  }
+
+  // Attach event listeners
+  ['loan-total-cost', 'loan-downpayment', 'loan-tenure', 'loan-interest'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', calculateEMI);
+    }
+  });
+
+  calculateEMI();
+</script>

@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+---
+
+<BaseLayout
+  title="Privacy Policy | FlyAustria Study Abroad"
+  description="Privacy Policy for FlyAustria Study Abroad website and lead submission services in Kochi, Kerala."
+>
+  <PageHero
+    badgeText="DATA PROTECTION & TRUST"
+    titlePrefix="FlyAustria"
+    titleHighlight="Privacy Policy"
+    titleSuffix="& Student Data Standards"
+    subtitle="Your personal details and academic credentials are protected with zero third-party sharing."
+    description="We are committed to maintaining the privacy and security of every student who submits an eligibility assessment or contacts our Kochi office."
+    primaryCtaText="BOOK FREE CONSULTATION"
+    primaryCtaLink="/#contact-section"
+    secondaryCtaText="INSTAGRAM"
+    secondaryCtaLink="https://instagram.com"
+    highlightsTitle="PRIVACY GUARANTEES"
+    highlightsBadge="100% SECURE"
+    highlights={[
+      { icon: "🔒", title: "Encrypted Data", subtitle: "SSL Protected Portal" },
+      { icon: "🚫", title: "Zero Data Sale", subtitle: "No Marketing Spam" },
+      { icon: "📋", title: "Strict Use", subtitle: "Only for Visa & Admissions" },
+      { icon: "🏢", title: "Kochi Office", subtitle: "MG Road, Express Towers" }
+    ]}
+  />
+
+  <section class="py-16 max-w-4xl mx-auto px-4 sm:px-6">
+    <div class="bg-white p-8 sm:p-10 rounded-3xl border border-slate-200/90 shadow-sm space-y-6 text-sm text-slate-600 leading-relaxed">
+      <p class="font-mono text-xs text-slate-400">Last updated: August 29, 2026</p>
+      
+      <div>
+        <h2 class="text-base font-bold text-slate-900 mb-2">1. Information Collection</h2>
+        <p>FlyAustria Study Abroad collects personal information (such as name, phone number, email address, academic qualifications) provided voluntarily by users submitting eligibility assessment forms or contacting us via WhatsApp.</p>
+      </div>
+      
+      <div>
+        <h2 class="text-base font-bold text-slate-900 mb-2">2. Use of Information</h2>
+        <p>Your information is strictly used to evaluate university eligibility, contact you regarding admission requirements in Austria, structure visa files, and provide on-ground support. We NEVER sell or share your data with third-party marketing companies.</p>
+      </div>
+      
+      <div>
+        <h2 class="text-base font-bold text-slate-900 mb-2">3. Data Security</h2>
+        <p>We implement robust technical protocols to safeguard your lead data and uploaded academic documents against unauthorized access.</p>
+      </div>
+      
+      <div>
+        <h2 class="text-base font-bold text-slate-900 mb-2">4. Contact Us</h2>
+        <p>If you have any questions regarding your data, please email info@flyaustria.in or visit our office at Express Towers, MG Road, Kochi, Kerala.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

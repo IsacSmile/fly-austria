@@ -1,0 +1,60 @@
+---
+interface Props {
+  type?: 'LocalBusiness' | 'EducationalOrganization' | 'FAQPage' | 'Service';
+  title?: string;
+  description?: string;
+  faqs?: Array<{ question: string; answer: string }>;
+}
+
+const { type = 'LocalBusiness', title, description, faqs } = Astro.props;
+
+const siteUrl = 'https://flyaustria.in';
+
+const localBusinessSchema = {
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  "name": "FlyAustria Study Abroad",
+  "url": siteUrl,
+  "logo": `${siteUrl}/images/logo.png`,
+  "image": `${siteUrl}/images/hero-vienna.jpg`,
+  "description": "Kerala's leading study abroad consultancy focusing exclusively on Austrian public university admissions, student residence permit visas, and housing.",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "3rd Floor, Express Towers, MG Road",
+    "addressLocality": "Kochi",
+    "addressRegion": "Kerala",
+    "postalCode": "682016",
+    "addressCountry": "IN"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "9.9723",
+    "longitude": "76.2785"
+  },
+  "telephone": "+919876543210",
+  "priceRange": "€€",
+  "sameAs": [
+    "https://instagram.com/flyaustria.in",
+    "https://wa.me/919876543210"
+  ]
+};
+
+const faqSchema = faqs ? {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answer
+    }
+  }))
+} : null;
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(localBusinessSchema)}></script>
+
+{faqSchema && (
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)}></script>
+)}

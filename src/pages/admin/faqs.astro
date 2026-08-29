@@ -1,0 +1,142 @@
+---
+export const prerender = false;
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { db, faqs } from '../../db';
+import { COOKIE_NAME, verifySessionToken } from '../../lib/adminAuth';
+
+const token = Astro.cookies.get(COOKIE_NAME)?.value;
+if (!verifySessionToken(token)) {
+  return Astro.redirect('/admin/login');
+}
+
+let allFaqs = [];
+try {
+  allFaqs = await db.select().from(faqs);
+} catch (err) {
+  allFaqs = [];
+}
+---
+
+<AdminLayout title="FAQ Knowledgebase" subtitle="Manage frequently asked questions & student answers">
+  
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    
+    <!-- Create FAQ Form (4 cols) -->
+    <div class="lg:col-span-4 bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm space-y-4">
+      <h3 class="text-base font-extrabold text-[#0F172A] font-serif border-b border-slate-100 pb-3">
+        Add FAQ Item
+      </h3>
+
+      <form id="create-faq-form" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">Category</label>
+          <select
+            name="category"
+            class="w-full p-2.5 rounded-xl border border-slate-200 font-bold bg-slate-50 focus:ring-2 focus:ring-[#C8102E]"
+            required
+          >
+            <option value="Visa & Residence Permit">🛂 Visa & Residence Permit</option>
+            <option value="Tuition & Finance">💶 Tuition & Financial Proof</option>
+            <option value="Accommodation & Housing">🏠 OEAD Housing & Dorms</option>
+            <option value="University Admissions">🏛️ University Portal Admissions</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">Question</label>
+          <input
+            type="text"
+            name="question"
+            placeholder="Do I need a German Sperrkonto for Austrian student visa?"
+            class="w-full p-2.5 rounded-xl border border-slate-200 font-medium bg-white focus:ring-2 focus:ring-[#C8102E]"
+            required
+          />
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-800 mb-1">Answer</label>
+          <textarea
+            name="answer"
+            rows="4"
+            placeholder="Detailed answer explaining rules for Kerala students..."
+            class="w-full p-2.5 rounded-xl border border-slate-200 font-medium bg-white focus:ring-2 focus:ring-[#C8102E]"
+            required
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full py-3 bg-[#0F172A] hover:bg-[#C8102E] text-white font-bold rounded-xl transition-colors shadow-md cursor-pointer"
+        >
+          Save FAQ Knowledgebase Item
+        </button>
+      </form>
+    </div>
+
+    <!-- Active FAQs List (8 cols) -->
+    <div class="lg:col-span-8 bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div>
+          <h3 class="text-base font-extrabold text-[#0F172A] font-serif">FAQ Knowledgebase</h3>
+          <p class="text-xs text-slate-500">Live answers displayed across site & lead section</p>
+        </div>
+        <span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 font-bold text-[10px]">
+          {allFaqs.length} Items
+        </span>
+      </div>
+
+      <div class="space-y-3">
+        {allFaqs.length === 0 ? (
+          <p class="text-xs text-slate-400 py-8 text-center font-medium">No FAQ items created yet.</p>
+        ) : (
+          allFaqs.map((f) => (
+            <div class="p-4 rounded-2xl bg-[#FAF9F6] border border-slate-200/80 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-extrabold text-[#C8102E] bg-red-50 px-2 py-0.5 rounded border border-red-100">
+                  {f.category}
+                </span>
+                <span class="text-[10px] text-slate-400">Order #{f.order || 0}</span>
+              </div>
+              <h4 class="font-bold text-slate-900 text-sm">{f.question}</h4>
+              <p class="text-xs text-slate-600 leading-relaxed">{f.answer}</p>
+            </div>
+          ))
+        )}
+      </div>
+
+    </div>
+
+  </div>
+
+</AdminLayout>
+
+<script>
+  document.getElementById('create-faq-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+
+    const payload = {
+      category: formData.get('category'),
+      question: formData.get('question'),
+      answer: formData.get('answer'),
+    };
+
+    try {
+      const res = await fetch('/api/admin/faqs/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        alert('✅ FAQ saved successfully!');
+        window.location.reload();
+      } else {
+        alert('❌ Failed to save FAQ.');
+      }
+    } catch (err) {
+      alert('❌ Error saving FAQ.');
+    }
+  });
+</script>

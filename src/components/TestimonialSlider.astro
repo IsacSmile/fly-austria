@@ -1,0 +1,327 @@
+---
+const testimonials = [
+  {
+    id: 'arjun',
+    name: 'Arjun',
+    fullName: 'Arjun Menon',
+    avatar: '/images/students/arjun.png',
+    university: 'TU Wien (Vienna Tech)',
+    degree: 'M.Sc. Computer Science',
+    city: 'Vienna, Austria',
+    quote: '"FlyAustria handled my MEA apostille and OEAD housing lock from Kochi smoothly. Public university tuition is just €726/semester—studying in Europe was the best choice!"',
+    badge: 'Tuition €726/Sem',
+    admissionType: 'TECH ADMISSION',
+    tagIcon: '🎓',
+  },
+  {
+    id: 'meera',
+    name: 'Meera',
+    fullName: 'Meera Nair',
+    avatar: '/images/students/pooja.png',
+    university: 'University of Graz',
+    degree: 'M.Sc. Molecular Biology',
+    city: 'Graz, Austria',
+    quote: '"The step-by-step guidance on Austrian Embassy visa requirements saved me months of stress. The Kochi team was with me until I landed in Vienna."',
+    badge: 'Full Visa Assistance',
+    admissionType: 'ENGLISH MASTER\'S',
+    tagIcon: '🔬',
+  },
+  {
+    id: 'reshma',
+    name: 'Reshma',
+    fullName: 'Reshma K.P.',
+    avatar: '/images/students/pooja.png',
+    university: 'TU Graz',
+    degree: 'M.Sc. Biomedical Engineering',
+    city: 'Graz, Austria',
+    quote: '"No blocked account required like Germany! Showing bank statement in Kerala was simple with FlyAustria\'s exact documentation guidance."',
+    badge: 'Bank Proof Process',
+    admissionType: 'DIRECT ADMISSION',
+    tagIcon: '🏛️',
+  },
+  {
+    id: 'fatima',
+    name: 'Fatima',
+    fullName: 'Fatima Abdul',
+    avatar: '/images/students/pooja.png',
+    university: 'JKU Linz',
+    degree: 'M.Sc. AI & Data Science',
+    city: 'Linz, Austria',
+    quote: '"Got admitted to a top 300 world-ranked public university in Linz with 100% English medium instruction. FlyAustria is genuine and highly trustworthy."',
+    badge: 'Public Uni Admission',
+    admissionType: '100% ENGLISH MEDIUM',
+    tagIcon: '💻',
+  },
+  {
+    id: 'divya',
+    name: 'Divya',
+    fullName: 'Divya Suresh',
+    avatar: '/images/students/pooja.png',
+    university: 'University of Innsbruck',
+    degree: 'M.Sc. Environmental Mgmt',
+    city: 'Innsbruck, Austria',
+    quote: '"From degree equivalency evaluation to OEAD dorm booking, every detail was handled professionally. I am now working 20 hrs/week legally in Austria."',
+    badge: 'Part-Time Work Permitted',
+    admissionType: 'DIRECT ADMISSION',
+    tagIcon: '🌱',
+  },
+  {
+    id: 'pooja',
+    name: 'Pooja',
+    fullName: 'Pooja Sharma',
+    avatar: '/images/students/pooja.png',
+    university: 'University of Vienna',
+    degree: 'M.A. European Studies',
+    city: 'Vienna, Austria',
+    quote: '"My Austrian Embassy interview prep with FlyAustria was flawless. I received my Aufenthaltsbewilligung student residence permit in 3 weeks!"',
+    badge: '3-Week Visa Turnaround',
+    admissionType: 'DIRECT ADMISSION',
+    tagIcon: '🎓',
+  },
+  {
+    id: 'sneha',
+    name: 'Sneha',
+    fullName: 'Sneha Sundaram',
+    avatar: '/images/students/pooja.png',
+    university: 'Medical University of Vienna',
+    degree: 'M.Sc. Medical Physics',
+    city: 'Vienna, Austria',
+    quote: '"From health insurance compliance to opening my Austrian Erste Bank student account, FlyAustria made my transition to Vienna effortless."',
+    badge: 'Full Health Setup',
+    admissionType: 'ÖGK HEALTH SETUP',
+    tagIcon: '🏥',
+  },
+  {
+    id: 'karthik',
+    name: 'Karthik',
+    fullName: 'Karthik V.',
+    avatar: '/images/students/arjun.png',
+    university: 'TU Wien',
+    degree: 'M.Sc. Civil Engineering',
+    city: 'Vienna, Austria',
+    quote: '"FlyAustria organized my airport pickup and local residence registration (Meldezettel) seamlessly. Outstanding end-to-end service for Kerala students!"',
+    badge: 'On-Ground Support',
+    admissionType: 'ENGINEERING INTAKE',
+    tagIcon: '✈️',
+  },
+];
+---
+
+<section class="py-12 sm:py-20 bg-[#FAF9F6] relative overflow-hidden" id="student-stories">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6">
+    
+    <!-- Top Header -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0F172A] text-emerald-400 text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest shadow-xs mb-3">
+        <span>✨ VERIFIED STUDENT SUCCESS STORIES</span>
+      </div>
+      <h2 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 font-serif tracking-tight mb-2">
+        Real Students. Proven Pathways.
+      </h2>
+      <p class="text-slate-600 text-xs sm:text-base max-w-xl mx-auto leading-relaxed px-2">
+        Hear directly from international students successfully studying in top Austrian public universities.
+      </p>
+    </div>
+
+    <!-- Student Avatar Selector Wrap (Wrapped rows on mobile, exact matching prompt!) -->
+    <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 max-w-md sm:max-w-xl mx-auto mb-8 px-1">
+      {testimonials.map((student, idx) => (
+        <button
+          type="button"
+          data-testimonial-btn={idx}
+          class={`testimonial-pill-btn px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs font-bold flex items-center gap-2 transition-all duration-200 border cursor-pointer ${
+            idx === 6
+              ? 'bg-[#0F172A] text-white border-slate-800 shadow-md ring-2 ring-emerald-400/40 scale-105'
+              : 'bg-white text-slate-700 hover:bg-slate-50 border-slate-200/90 shadow-xs'
+          }`}
+        >
+          <img
+            src={student.avatar}
+            alt={student.name}
+            class="w-5 h-5 sm:w-6 sm:h-6 rounded-full object-cover border border-white shrink-0"
+            loading="lazy"
+          />
+          <span class="whitespace-nowrap">{student.name}</span>
+        </button>
+      ))}
+    </div>
+
+    <!-- Active Testimonial Card Display -->
+    <div class="relative">
+      {testimonials.map((student, idx) => (
+        <div
+          data-testimonial-card={idx}
+          class={`testimonial-card transition-all duration-300 ${idx === 6 ? 'block' : 'hidden'}`}
+        >
+          <div class="relative bg-white border border-slate-200/90 rounded-3xl sm:rounded-[2rem] p-5 sm:p-9 shadow-xl shadow-slate-900/5 max-w-3xl mx-auto">
+            
+            <!-- Decorative Pink/Red Quote Mark -->
+            <div class="absolute top-3 right-5 sm:top-5 sm:right-8 text-red-100 font-serif text-5xl sm:text-7xl select-none opacity-90 leading-none">
+              ”
+            </div>
+
+            <!-- Student Profile Header (Mobile Side-by-Side Flex Layout) -->
+            <div class="flex flex-row items-start gap-3.5 sm:gap-5 relative z-10">
+              
+              <!-- Avatar with Red VERIFIED Badge Overlay -->
+              <div class="relative w-16 h-16 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border border-slate-200 shadow-md shrink-0">
+                <img
+                  src={student.avatar}
+                  alt={student.fullName}
+                  class="w-full h-full object-cover"
+                />
+                <div class="absolute bottom-0 inset-x-0 bg-[#C8102E] text-white text-[8px] sm:text-[9px] font-extrabold uppercase py-0.5 text-center tracking-wider leading-none">
+                  VERIFIED ✓
+                </div>
+              </div>
+
+              <!-- Details Block -->
+              <div class="flex-1 min-w-0 space-y-1">
+                <div class="flex flex-wrap items-center gap-1.5 mb-1">
+                  <!-- Star Rating -->
+                  <div class="flex items-center gap-0.5 text-red-600 text-xs sm:text-sm">
+                    ★ ★ ★ ★ ★
+                  </div>
+                  <!-- Tag Badge -->
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-red-50 text-[#C8102E] text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider border border-red-200/70">
+                    <span>{student.tagIcon}</span>
+                    <span>{student.admissionType}</span>
+                  </span>
+                </div>
+
+                <h3 class="text-lg sm:text-2xl font-extrabold text-slate-900 font-serif tracking-tight leading-tight">
+                  {student.fullName}
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-600 flex items-center gap-1 font-medium truncate">
+                  <span>🏛️</span>
+                  <span class="font-semibold text-slate-800 truncate">{student.university}</span>
+                </p>
+                <p class="text-[11px] sm:text-xs text-slate-500 flex items-center gap-1 truncate">
+                  <span>🎓</span>
+                  <span class="truncate">{student.degree}</span>
+                </p>
+              </div>
+
+            </div>
+
+            <!-- Quote Text -->
+            <blockquote class="text-slate-800 italic text-xs sm:text-base font-medium leading-relaxed my-4 sm:my-6 border-t border-slate-100 pt-4 sm:pt-6 relative z-10">
+              {student.quote}
+            </blockquote>
+
+            <!-- Card Footer -->
+            <div class="flex flex-row items-center justify-between gap-2 pt-3 sm:pt-4 border-t border-slate-100 text-[11px] sm:text-xs relative z-10">
+              <div class="flex items-center gap-1.5 text-slate-500 font-medium">
+                <span class="text-red-600 font-bold">📍</span>
+                <span>{student.city}</span>
+              </div>
+
+              <div class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 font-bold tracking-tight text-[11px] sm:text-xs border border-slate-200/80">
+                {student.badge}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Navigation Controls & Student Counter -->
+    <div class="flex items-center justify-between max-w-3xl mx-auto mt-5 px-1">
+      <span id="testimonial-counter" class="text-xs sm:text-sm font-semibold text-slate-600">
+        Student 7 of {testimonials.length}
+      </span>
+
+      <div class="flex items-center gap-2">
+        <button
+          id="prev-testimonial-btn"
+          type="button"
+          aria-label="Previous Testimonial"
+          class="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white hover:bg-[#0F172A] text-slate-700 hover:text-white border border-slate-200/90 flex items-center justify-center transition-all shadow-xs active:scale-95 cursor-pointer text-base font-bold"
+        >
+          ‹
+        </button>
+        <button
+          id="next-testimonial-btn"
+          type="button"
+          aria-label="Next Testimonial"
+          class="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#0F172A] hover:bg-[#C8102E] text-white flex items-center justify-center transition-all shadow-xs active:scale-95 cursor-pointer text-base font-bold"
+        >
+          ›
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom Trust Metrics Bar -->
+    <div class="bg-white border border-slate-200/90 rounded-2xl sm:rounded-full py-3 px-4 sm:px-10 shadow-xs flex flex-wrap items-center justify-center gap-3 sm:gap-4 max-w-3xl mx-auto mt-6 sm:mt-8 text-[11px] sm:text-xs font-bold text-slate-700 text-center">
+      <div class="flex items-center justify-center gap-1.5">
+        <span class="w-4 h-4 rounded-full bg-red-100 text-[#C8102E] flex items-center justify-center text-[10px] font-bold">✓</span>
+        <span>99.2% Visa Success</span>
+      </div>
+      <span class="text-slate-300">|</span>
+      <div class="flex items-center gap-1.5">
+        <span class="w-4 h-4 rounded-full bg-red-100 text-[#C8102E] flex items-center justify-center text-[10px] font-bold">✓</span>
+        <span>150+ Kerala Students</span>
+      </div>
+      <span class="hidden sm:inline text-slate-300">|</span>
+      <div class="hidden sm:flex items-center gap-1.5">
+        <span class="w-4 h-4 rounded-full bg-red-100 text-[#C8102E] flex items-center justify-center text-[10px] font-bold">✓</span>
+        <span>4.9 / 5 Rating</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  let currentIndex = 6; // Sneha active by default matching prompt image
+  const pillBtns = document.querySelectorAll('.testimonial-pill-btn');
+  const cards = document.querySelectorAll('[data-testimonial-card]');
+  const counterEl = document.getElementById('testimonial-counter');
+  const prevBtn = document.getElementById('prev-testimonial-btn');
+  const nextBtn = document.getElementById('next-testimonial-btn');
+
+  const total = cards.length;
+
+  function showTestimonial(index) {
+    currentIndex = (index + total) % total;
+
+    // Update active pill button state
+    pillBtns.forEach((btn, idx) => {
+      if (idx === currentIndex) {
+        btn.className = 'testimonial-pill-btn px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs font-bold flex items-center gap-2 transition-all duration-200 border cursor-pointer bg-[#0F172A] text-white border-slate-800 shadow-md ring-2 ring-emerald-400/40 scale-105';
+      } else {
+        btn.className = 'testimonial-pill-btn px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs font-bold flex items-center gap-2 transition-all duration-200 border cursor-pointer bg-white text-slate-700 hover:bg-slate-50 border-slate-200/90 shadow-xs';
+      }
+    });
+
+    // Update active card display
+    cards.forEach((card, idx) => {
+      if (idx === currentIndex) {
+        card.classList.remove('hidden');
+        card.classList.add('block');
+      } else {
+        card.classList.remove('block');
+        card.classList.add('hidden');
+      }
+    });
+
+    // Update counter text
+    if (counterEl) {
+      counterEl.textContent = `Student ${currentIndex + 1} of ${total}`;
+    }
+  }
+
+  // Add click handlers to pill buttons
+  pillBtns.forEach((btn, idx) => {
+    btn.addEventListener('click', () => showTestimonial(idx));
+  });
+
+  // Next / Prev click handlers
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => showTestimonial(currentIndex - 1));
+  }
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => showTestimonial(currentIndex + 1));
+  }
+</script>

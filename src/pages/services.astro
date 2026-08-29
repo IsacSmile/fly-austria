@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import LeadMagnetSection from '../components/LeadMagnetSection.astro';
+
+const servicesList = [
+  {
+    title: "1. Public University Admissions Guidance",
+    description: "Personalized shortlisting and formal application filing for English-taught Master's and Bachelor's programs across Austria's top 10 public universities.",
+    highlights: [
+      "Evaluation of Kerala B.Tech / B.Sc CGPA and course syllabus match",
+      "Direct portal submission to Uni Vienna, TU Graz, TU Wien, JKU Linz",
+      "IELTS exemption / Medium of Instruction certificate verification",
+      "Official University Admission Letter acquisition"
+    ],
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>`
+  },
+  {
+    title: "2. MEA Apostille & Legalization",
+    description: "Complete attestation workflow for your educational and personal documents required by Austrian public universities and the Austrian Embassy.",
+    highlights: [
+      "Kerala Higher Education / Home Dept attestation in Trivandrum",
+      "Ministry of External Affairs (MEA) Apostille in New Delhi",
+      "Certified German/English translations by sworn translators",
+      "Austrian Embassy legalization verification"
+    ],
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>`
+  },
+  {
+    title: "3. Student Residence Permit Visa Filing",
+    description: "Expert preparation of your Austrian Aufenthaltsbewilligung Studierende visa application for submission at Austrian Embassy VFS New Delhi.",
+    highlights: [
+      "Structuring Indian savings bank balance (No Sperrkonto required)",
+      "Sponsorship document compilation & affidavit formatting",
+      "VFS New Delhi appointment scheduling and interview prep",
+      "Austrian Student Travel Insurance arrangement"
+    ],
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 01-2-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>`
+  },
+  {
+    title: "4. OEAD Student Housing Lock",
+    description: "Securing an official OEAD or Wihast student apartment contract prior to visa filing, fulfilling Austria's mandatory accommodation proof rule.",
+    highlights: [
+      "Official rental agreement contract for Embassy visa application",
+      "Single or shared student dorm options (€320 to €480/month)",
+      "Guaranteed locations near university campuses in Vienna, Graz, Linz",
+      "Security deposit processing guidance"
+    ],
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>`
+  },
+  {
+    title: "5. On-Ground Austria Support",
+    description: "Seamless reception in Vienna or Graz upon landing, ensuring you settle into your student routine without bureaucratic friction.",
+    highlights: [
+      "Vienna Airport (VIE) or Graz (GRZ) pickup & transport",
+      "Municipal registration (Meldezettel) at District Magistrat",
+      "Austrian bank account opening (Erste Bank / Bank Austria)",
+      "Semester public transport pass activation"
+    ],
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>`
+  },
+  {
+    title: "6. Spouse & Dependent Visa Support",
+    description: "Specialized assistance for married students bringing their spouse to Austria, including housing requirements and work permit rights.",
+    highlights: [
+      "Spouse dependent visa documentation",
+      "Unrestricted full-time work permit guidance for spouse",
+      "Family housing rental contract registration",
+      "Family health insurance extension"
+    ],
+    icon: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>`
+  }
+];
+---
+
+<BaseLayout
+  title="Services | FlyAustria Study Abroad Kochi"
+  description="Explore our complete services for Austrian public university admissions, MEA apostille legalization, OEAD student housing, and student residence permit visas."
+>
+  <PageHero
+    badgeText="END-TO-END HIGHER EDUCATION SERVICES"
+    titlePrefix="Comprehensive Solutions for"
+    titleHighlight="Studying in Austria"
+    titleSuffix="& Germany!"
+    subtitle="Equipping Kerala students with 100% transparent guidance for tuition-free public universities."
+    description="From initial profile evaluation in Kochi to university admissions, MEA apostille, OEAD student dorm booking, and visa processing at VFS New Delhi—we manage every step of your journey."
+    primaryCtaText="BOOK FREE CONSULTATION"
+    primaryCtaLink="/#contact-section"
+    secondaryCtaText="INSTAGRAM"
+    secondaryCtaLink="https://instagram.com"
+    highlightsTitle="SERVICES OVERVIEW"
+    highlightsBadge="100% CLEAR"
+    highlights={[
+      { icon: "🏛️", title: "Uni Admissions", subtitle: "Top Public Campuses" },
+      { icon: "📜", title: "MEA Apostille", subtitle: "Kerala & Delhi Legalization" },
+      { icon: "🏠", title: "OEAD Housing", subtitle: "Official Dorm Contracts" },
+      { icon: "🛂", title: "Visa Filing", subtitle: "Student Residence Permit" }
+    ]}
+  />
+
+  <section class="py-16 bg-[#FAF9F6]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {servicesList.map((s) => (
+          <ServiceCard
+            title={s.title}
+            description={s.description}
+            highlights={s.highlights}
+            icon={s.icon}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <LeadMagnetSection />
+</BaseLayout>

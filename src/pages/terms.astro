@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+---
+
+<BaseLayout
+  title="Terms of Service | FlyAustria Study Abroad"
+  description="Terms of Service governing consultancy agreements and website usage for FlyAustria Study Abroad Kochi."
+>
+  <PageHero
+    badgeText="LEGAL & SERVICE STANDARDS"
+    titlePrefix="FlyAustria"
+    titleHighlight="Terms of Service"
+    titleSuffix="& Student Agreements"
+    subtitle="Transparent terms governing university application guidance and embassy visa filing."
+    description="We maintain 100% transparency regarding public university admissions policies, tuition fees set by Austrian law, and student responsibilities."
+    primaryCtaText="BOOK FREE CONSULTATION"
+    primaryCtaLink="/#contact-section"
+    secondaryCtaText="INSTAGRAM"
+    secondaryCtaLink="https://instagram.com"
+    highlightsTitle="SERVICE GUARANTEES"
+    highlightsBadge="100% TRANSPARENT"
+    highlights={[
+      { icon: "🏛️", title: "Public Unis", subtitle: "Official Portal Filing" },
+      { icon: "💶", title: "€726 Fees", subtitle: "Paid Directly to Uni" },
+      { icon: "📜", title: "Attestation", subtitle: "Genuine Credentials" },
+      { icon: "🤝", title: "No Advance", subtitle: "Before Eligibility Check" }
+    ]}
+  />
+
+  <section class="py-16 max-w-4xl mx-auto px-4 sm:px-6">
+    <div class="bg-white p-8 sm:p-10 rounded-3xl border border-slate-200/90 shadow-sm space-y-6 text-sm text-slate-600 leading-relaxed">
+      <p class="font-mono text-xs text-slate-400">Last updated: August 29, 2026</p>
+      
+      <div>
+        <h2 class="text-base font-bold text-slate-900 mb-2">1. Consultancy Scope</h2>
+        <p>FlyAustria Study Abroad provides guidance, university portal filing, MEA attestation support, and student residence permit visa documentation. Public university admissions decisions are solely at the discretion of Austrian public university admission boards (<em>Zulassungsabteilung</em>).</p>
+      </div>
+      
+      <div>
+        <h2 class="text-base font-bold text-slate-900 mb-2">2. Accuracy of Information</h2>
+        <p>Students are responsible for providing authentic educational credentials, marksheets, and genuine bank financial proofs. Submission of forged documents will result in immediate termination of service without refund.</p>
+      </div>
+      
+      <div>
+        <h2 class="text-base font-bold text-slate-900 mb-2">3. Public University Tuition Fees</h2>
+        <p>Public university tuition fees in Austria (€726.72 / semester) are determined by Austrian federal law and paid directly by the student to the university bank account.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

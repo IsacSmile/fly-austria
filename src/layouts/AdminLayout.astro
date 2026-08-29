@@ -1,0 +1,99 @@
+---
+import { COOKIE_NAME, verifySessionToken } from '../lib/adminAuth';
+import { db, enquiries } from '../db';
+import { eq } from 'drizzle-orm';
+import AdminSidebar from '../components/admin/AdminSidebar.astro';
+import AdminHeader from '../components/admin/AdminHeader.astro';
+
+interface Props {
+  title: string;
+  subtitle?: string;
+}
+
+const { title, subtitle } = Astro.props;
+
+// 1. Session Verification
+const token = Astro.cookies.get(COOKIE_NAME)?.value;
+const isAuthenticated = verifySessionToken(token);
+
+// 2. Fetch Pending Enquiries Count for Badges (only if authenticated)
+let pendingCount = 0;
+if (isAuthenticated) {
+  try {
+    const newEnquiries = await db.select().from(enquiries).where(eq(enquiries.status, 'new'));
+    pendingCount = newEnquiries.length;
+  } catch (err) {
+    pendingCount = 0;
+  }
+}
+
+const currentPath = Astro.url.pathname;
+---
+
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-[#FAF9F6]">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title} | FlyAustria Executive CRM</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  
+  {!isAuthenticated && (
+    <>
+      <meta http-equiv="refresh" content="0;url=/admin/login" />
+      <script is:inline>
+        window.location.href = '/admin/login';
+      </script>
+    </>
+  )}
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="h-full font-sans text-slate-800 antialiased selection:bg-[#C8102E] selection:text-white">
+
+  {!isAuthenticated ? (
+    <div class="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-6 text-center space-y-4">
+      <div class="w-12 h-12 rounded-full border-4 border-red-500 border-t-transparent animate-spin"></div>
+      <h2 class="text-xl font-bold font-serif">Redirecting to Executive Login...</h2>
+      <p class="text-xs text-slate-400">Please wait while we verify your session security credentials.</p>
+      <a href="/admin/login" class="text-xs text-red-400 font-bold hover:underline">Click here if not redirected automatically →</a>
+    </div>
+  ) : (
+    <div class="min-h-full flex">
+      <!-- Left Executive Sidebar -->
+      <AdminSidebar
+        currentPath={currentPath}
+        pendingCount={pendingCount}
+        adminName="Faiz I."
+        adminRole="Executive Counselor"
+      />
+
+      <!-- Main Content Area -->
+      <div class="flex-1 lg:pl-72 flex flex-col min-w-0 min-h-screen">
+        
+        <!-- Top Header -->
+        <AdminHeader
+          title={title}
+          subtitle={subtitle}
+          pendingCount={pendingCount}
+        />
+
+        <!-- Page Content Body -->
+        <main class="flex-1 p-4 sm:p-6 lg:p-8 space-y-6">
+          <slot />
+        </main>
+
+        <!-- Footer -->
+        <footer class="py-4 px-6 border-t border-slate-200/80 text-center text-xs text-slate-400 bg-white/50 font-medium">
+          FlyAustria Executive CRM • Higher Education Consultancy Portal Kochi • Protected Access
+        </footer>
+      </div>
+    </div>
+  )}
+
+</body>
+</html>

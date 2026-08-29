@@ -1,0 +1,195 @@
+---
+---
+
+<!-- Engagement Modal Backdrop & Dialog -->
+<div
+  id="engagement-modal-backdrop"
+  class="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 transition-opacity duration-300 opacity-0"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="modal-title"
+>
+  <div
+    id="engagement-modal-card"
+    class="relative bg-white rounded-3xl p-5 sm:p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 transform scale-95 transition-transform duration-300 space-y-4 my-auto"
+  >
+    <!-- Close X Button -->
+    <button
+      id="close-modal-btn"
+      type="button"
+      aria-label="Close modal"
+      class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 p-2 rounded-full hover:bg-slate-100 transition-colors"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- Modal Header -->
+    <div class="space-y-1.5">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-[#C8102E] text-[10px] font-extrabold uppercase tracking-wider border border-red-200/60">
+        <span>⚡ 2026 Intake Fast-Track</span>
+      </span>
+
+      <h3 id="modal-title" class="text-2xl font-extrabold text-[#0F172A] font-serif leading-snug">
+        Free Austria 2026 Student Visa & Admission Assessment
+      </h3>
+      
+      <p class="text-slate-600 text-xs leading-relaxed">
+        Submit your WhatsApp number to get your degree evaluated for Austrian public university eligibility by senior Kochi consultants.
+      </p>
+    </div>
+
+    <!-- Modal Lead Form -->
+    <div id="modal-form-container">
+      <form id="popup-lead-form" class="space-y-3">
+        <input type="hidden" name="source" value="modal" />
+        
+        <div>
+          <label for="modal-name" class="block text-[11px] font-bold text-slate-700 mb-1">Full Name</label>
+          <input
+            type="text"
+            id="modal-name"
+            name="fullName"
+            required
+            placeholder="e.g. Rahul Dev"
+            class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:border-[#C8102E] focus:ring-2 focus:ring-[#C8102E]/20 bg-white"
+          />
+        </div>
+
+        <div>
+          <label for="modal-phone" class="block text-[11px] font-bold text-slate-700 mb-1">WhatsApp Number *</label>
+          <input
+            type="tel"
+            id="modal-phone"
+            name="whatsappNumber"
+            required
+            placeholder="e.g. +91 98765 43210"
+            class="w-full px-3 py-2 text-xs rounded-xl border border-slate-300 focus:border-[#C8102E] focus:ring-2 focus:ring-[#C8102E]/20 bg-white"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-[#0F172A] hover:bg-[#C8102E] text-white text-xs font-bold uppercase tracking-wider py-3 px-5 rounded-full flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
+        >
+          <span>Get Free WhatsApp Call Back</span>
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+            <path d="M13.025 1l-1.42 1.414 6.586 6.586h-18.191v2h18.191l-6.586 6.586 1.42 1.414 9-9z"/>
+          </svg>
+        </button>
+      </form>
+    </div>
+
+    <!-- Success Message Container (Hidden by default) -->
+    <div id="modal-success-msg" class="hidden p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-center space-y-2">
+      <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-sm font-bold">✓</div>
+      <h4 class="text-xs font-bold text-emerald-900">Assessment Request Submitted!</h4>
+      <p class="text-[11px] text-emerald-700 leading-normal">
+        Our Kochi educational team will reach out to you on WhatsApp within 2 hours.
+      </p>
+    </div>
+
+    <div class="pt-1 text-center">
+      <button
+        id="dismiss-modal-btn"
+        type="button"
+        class="text-xs text-slate-500 hover:text-slate-800 font-semibold transition-colors cursor-pointer"
+      >
+        Maybe later, continue browsing
+      </button>
+    </div>
+
+    <!-- Social Proof Trust Line -->
+    <p class="text-[10px] text-center text-slate-400 font-medium border-t border-slate-100 pt-2.5">
+      🔒 Trusted by 150+ Kerala students in Kochi, Trivandrum & Calicut.
+    </p>
+  </div>
+</div>
+
+<script>
+  const backdrop = document.getElementById('engagement-modal-backdrop');
+  const modalCard = document.getElementById('engagement-modal-card');
+  const closeBtn = document.getElementById('close-modal-btn');
+  const dismissBtn = document.getElementById('dismiss-modal-btn');
+  const leadForm = document.getElementById('popup-lead-form') as HTMLFormElement;
+  const formContainer = document.getElementById('modal-form-container');
+  const successMsg = document.getElementById('modal-success-msg');
+
+  function openModal() {
+    if (!backdrop || !modalCard) return;
+    backdrop.classList.remove('hidden');
+    backdrop.classList.add('flex');
+    setTimeout(() => {
+      backdrop.classList.remove('opacity-0');
+      modalCard.classList.remove('scale-95');
+      modalCard.classList.add('scale-100');
+    }, 10);
+  }
+
+  function closeModal() {
+    if (!backdrop || !modalCard) return;
+    backdrop.classList.add('opacity-0');
+    modalCard.classList.remove('scale-100');
+    modalCard.classList.add('scale-95');
+    setTimeout(() => {
+      backdrop.classList.add('hidden');
+      backdrop.classList.remove('flex');
+    }, 300);
+  }
+
+  // Handle AJAX Form Submission to /api/enquiry
+  if (leadForm) {
+    leadForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(leadForm);
+      const data = {
+        fullName: formData.get('fullName'),
+        whatsappNumber: formData.get('whatsappNumber'),
+        source: 'modal',
+      };
+
+      try {
+        const res = await fetch('/api/enquiry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        if (res.ok) {
+          if (formContainer) formContainer.classList.add('hidden');
+          if (successMsg) successMsg.classList.remove('hidden');
+          setTimeout(() => closeModal(), 3500);
+        }
+      } catch (err) {
+        console.error('Error submitting popup enquiry:', err);
+      }
+    });
+  }
+
+  // SessionStorage check (Trigger after 4 seconds once per session)
+  if (typeof window !== 'undefined') {
+    const hasSeenModal = sessionStorage.getItem('flyaustria_modal_seen');
+    if (!hasSeenModal) {
+      setTimeout(() => {
+        openModal();
+        sessionStorage.setItem('flyaustria_modal_seen', 'true');
+      }, 4000);
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (dismissBtn) dismissBtn.addEventListener('click', closeModal);
+
+    if (backdrop) {
+      backdrop.addEventListener('click', (e) => {
+        if (e.target === backdrop) closeModal();
+      });
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && backdrop && !backdrop.classList.contains('hidden')) {
+        closeModal();
+      }
+    });
+  }
+</script>

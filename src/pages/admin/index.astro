@@ -1,0 +1,300 @@
+---
+export const prerender = false;
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { db, enquiries, consultations } from '../../db';
+import { COOKIE_NAME, verifySessionToken } from '../../lib/adminAuth';
+
+const token = Astro.cookies.get(COOKIE_NAME)?.value;
+if (!verifySessionToken(token)) {
+  return Astro.redirect('/admin/login');
+}
+
+// 1. Fetch Enquiries and Stats
+const allEnquiries = await db.select().from(enquiries);
+
+const totalEnquiries = allEnquiries.length;
+const newCount = allEnquiries.filter(e => e.status === 'new').length;
+const inProgressCount = allEnquiries.filter(e => e.status === 'in_progress').length;
+const convertedCount = allEnquiries.filter(e => e.status === 'converted').length;
+const followUpCount = allEnquiries.filter(e => e.status === 'follow_up').length;
+
+// Destination Distribution
+const austriaCount = allEnquiries.filter(e => !e.destination || e.destination === 'Austria').length;
+const germanyCount = allEnquiries.filter(e => e.destination === 'Germany').length;
+const otherCount = totalEnquiries - (austriaCount + germanyCount);
+
+const austriaPct = totalEnquiries > 0 ? Math.round((austriaCount / totalEnquiries) * 100) : 100;
+const germanyPct = totalEnquiries > 0 ? Math.round((germanyCount / totalEnquiries) * 100) : 0;
+const otherPct = totalEnquiries > 0 ? Math.round((otherCount / totalEnquiries) * 100) : 0;
+
+// Fetch Recent Consultations
+let recentConsultations = [];
+try {
+  recentConsultations = await db.select().from(consultations).limit(3);
+} catch (err) {
+  recentConsultations = [];
+}
+
+// Recent 5 Enquiries for quick preview
+const recentLeads = [...allEnquiries].reverse().slice(0, 5);
+---
+
+<AdminLayout title="Executive Overview" subtitle="High-level metrics & counselor advisory pipeline">
+  
+  <!-- Stats 5-Card Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+    
+    <!-- Total Enquiries -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm space-y-2 relative overflow-hidden group">
+      <div class="flex items-center justify-between text-slate-500">
+        <span class="text-[11px] font-extrabold uppercase tracking-wider">Total Leads</span>
+        <span class="p-2 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">📈</span>
+      </div>
+      <div class="text-3xl font-black text-[#0F172A] tracking-tight">{totalEnquiries}</div>
+      <p class="text-[10px] text-slate-500 font-medium">Captured from site forms</p>
+      <div class="absolute bottom-0 left-0 right-0 h-1 bg-slate-800"></div>
+    </div>
+
+    <!-- New Uncontacted -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm space-y-2 relative overflow-hidden group">
+      <div class="flex items-center justify-between text-slate-500">
+        <span class="text-[11px] font-extrabold uppercase tracking-wider text-amber-700">New Uncontacted</span>
+        <span class="p-2 rounded-xl bg-amber-100 text-amber-800 font-bold text-xs">🔔</span>
+      </div>
+      <div class="text-3xl font-black text-amber-600 tracking-tight">{newCount}</div>
+      <p class="text-[10px] text-amber-700 font-medium">Requires immediate reply</p>
+      <div class="absolute bottom-0 left-0 right-0 h-1 bg-amber-500"></div>
+    </div>
+
+    <!-- In Progress -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm space-y-2 relative overflow-hidden group">
+      <div class="flex items-center justify-between text-slate-500">
+        <span class="text-[11px] font-extrabold uppercase tracking-wider text-blue-700">In Progress</span>
+        <span class="p-2 rounded-xl bg-blue-100 text-blue-800 font-bold text-xs">⚙️</span>
+      </div>
+      <div class="text-3xl font-black text-blue-600 tracking-tight">{inProgressCount}</div>
+      <p class="text-[10px] text-blue-700 font-medium">University / Portal filing</p>
+      <div class="absolute bottom-0 left-0 right-0 h-1 bg-blue-500"></div>
+    </div>
+
+    <!-- Converted / Visa Approved -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm space-y-2 relative overflow-hidden group">
+      <div class="flex items-center justify-between text-slate-500">
+        <span class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-700">Visa Approved</span>
+        <span class="p-2 rounded-xl bg-emerald-100 text-emerald-800 font-bold text-xs">🎓</span>
+      </div>
+      <div class="text-3xl font-black text-emerald-600 tracking-tight">{convertedCount}</div>
+      <p class="text-[10px] text-emerald-700 font-medium">Enrolled in Austria</p>
+      <div class="absolute bottom-0 left-0 right-0 h-1 bg-emerald-500"></div>
+    </div>
+
+    <!-- Follow Up Due -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm space-y-2 relative overflow-hidden group">
+      <div class="flex items-center justify-between text-slate-500">
+        <span class="text-[11px] font-extrabold uppercase tracking-wider text-purple-700">Follow-Ups</span>
+        <span class="p-2 rounded-xl bg-purple-100 text-purple-800 font-bold text-xs">📆</span>
+      </div>
+      <div class="text-3xl font-black text-purple-600 tracking-tight">{followUpCount}</div>
+      <p class="text-[10px] text-purple-700 font-medium">Scheduled callbacks</p>
+      <div class="absolute bottom-0 left-0 right-0 h-1 bg-purple-500"></div>
+    </div>
+
+  </div>
+
+  <!-- Middle Grid: Destination Breakdown + Counselor Profile Card -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    
+    <!-- Destination Breakdown Bar Chart Card (7 cols) -->
+    <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div>
+          <h3 class="text-base font-extrabold text-[#0F172A] font-serif">Leads by Target Destination</h3>
+          <p class="text-xs text-slate-500">Distribution across central European university destinations</p>
+        </div>
+        <span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 font-extrabold text-[10px] uppercase">
+          {totalEnquiries} Leads Total
+        </span>
+      </div>
+
+      <!-- Horizontal Progress Bars -->
+      <div class="space-y-5">
+        
+        <!-- Austria Flagship -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between text-xs font-bold text-slate-800">
+            <span class="flex items-center gap-2">
+              <span class="text-base">🇦🇹</span>
+              <span>Austria (Public Universities Flagship)</span>
+            </span>
+            <span>{austriaCount} leads ({austriaPct}%)</span>
+          </div>
+          <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-[#C8102E] to-red-600 rounded-full" style={`width: ${austriaPct}%`}></div>
+          </div>
+        </div>
+
+        <!-- Germany Public Unis -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between text-xs font-bold text-slate-800">
+            <span class="flex items-center gap-2">
+              <span class="text-base">🇩🇪</span>
+              <span>Germany (Public Universities)</span>
+            </span>
+            <span>{germanyCount} leads ({germanyPct}%)</span>
+          </div>
+          <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full" style={`width: ${germanyPct}%`}></div>
+          </div>
+        </div>
+
+        <!-- Other EU Destinations -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between text-xs font-bold text-slate-800">
+            <span class="flex items-center gap-2">
+              <span class="text-base">🇪🇺</span>
+              <span>Other EU Programs</span>
+            </span>
+            <span>{otherCount} leads ({otherPct}%)</span>
+          </div>
+          <div class="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-slate-400 to-slate-600 rounded-full" style={`width: ${otherPct}%`}></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Action Buttons Row -->
+      <div class="pt-2 flex flex-wrap items-center gap-3 border-t border-slate-100">
+        <a
+          href="/admin/leads"
+          class="btn-primary py-2.5 px-4 text-xs font-bold rounded-xl shadow-xs inline-flex items-center gap-2"
+        >
+          <span>Open Student CRM Table</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </a>
+
+        <a
+          href="/admin/consultations"
+          class="py-2.5 px-4 text-xs font-bold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors inline-flex items-center gap-2"
+        >
+          <span>Schedule 1-on-1 Consultation</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Executive Counselor Profile & Advisory Card (5 cols) -->
+    <div class="lg:col-span-5 bg-gradient-to-br from-[#0F172A] to-[#1E293B] text-white p-6 rounded-3xl border border-slate-800 shadow-lg space-y-6 flex flex-col justify-between">
+      
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <span class="px-3 py-1 rounded-full bg-red-500/20 text-red-300 border border-red-500/30 text-[10px] font-extrabold uppercase tracking-wider">
+            Executive Advisory Profile
+          </span>
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        </div>
+
+        <div class="flex items-center gap-4 pt-2">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#C8102E] to-red-900 border-2 border-white/20 text-white font-serif font-black text-xl flex items-center justify-center shadow-md">
+            FI
+          </div>
+          <div>
+            <h4 class="text-base font-extrabold text-white font-serif">Faiz I.</h4>
+            <p class="text-xs text-slate-300">Executive Director & Senior Counselor</p>
+            <p class="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5">
+              <span>📍</span> Express Towers, MG Road, Kochi
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-white/5 p-4 rounded-2xl border border-white/10 space-y-2 text-xs">
+          <div class="flex items-center justify-between text-slate-300">
+            <span>Active Pipeline Queue:</span>
+            <strong class="text-white">{inProgressCount + newCount} Students</strong>
+          </div>
+          <div class="flex items-center justify-between text-slate-300">
+            <span>Visa Success Guarantee:</span>
+            <strong class="text-emerald-400 font-bold">100% Austrian Public</strong>
+          </div>
+          <div class="flex items-center justify-between text-slate-300">
+            <span>Primary Focus:</span>
+            <strong class="text-white">Uni Vienna, TU Graz, JKU Linz</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-white/10 flex items-center justify-between text-xs">
+        <span class="text-slate-400">FlyAustria Outreach System</span>
+        <a href="/admin/settings" class="text-red-400 font-bold hover:underline">CRM Settings →</a>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Bottom Table Preview: Recent 5 Leads -->
+  <div class="bg-white p-6 rounded-3xl border border-slate-200/90 shadow-sm space-y-4">
+    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+      <div>
+        <h3 class="text-base font-extrabold text-[#0F172A] font-serif">Recent Student Submissions</h3>
+        <p class="text-xs text-slate-500">Latest enquiries submitted across public site forms</p>
+      </div>
+      <a href="/admin/leads" class="text-xs font-bold text-[#C8102E] hover:underline">View All Leads ({totalEnquiries}) →</a>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse text-xs">
+        <thead>
+          <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase text-[10px] tracking-wider">
+            <th class="py-3 px-4">Student Name</th>
+            <th class="py-3 px-4">WhatsApp</th>
+            <th class="py-3 px-4">Qualification</th>
+            <th class="py-3 px-4">Target Degree</th>
+            <th class="py-3 px-4">Source</th>
+            <th class="py-3 px-4">Status</th>
+            <th class="py-3 px-4 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 text-slate-800 font-medium">
+          {recentLeads.map((lead) => (
+            <tr class="hover:bg-slate-50/80 transition-colors">
+              <td class="py-3 px-4 font-bold text-slate-900">{lead.fullName}</td>
+              <td class="py-3 px-4">
+                <a
+                  href={`https://wa.me/${lead.whatsappNumber.replace(/[^0-9]/g, '')}?text=Hi%20${encodeURIComponent(lead.fullName)}!%20This%20is%20FlyAustria%20Kochi.`}
+                  target="_blank"
+                  class="inline-flex items-center gap-1.5 text-emerald-700 font-bold hover:underline"
+                >
+                  <span>💬 {lead.whatsappNumber}</span>
+                </a>
+              </td>
+              <td class="py-3 px-4 text-slate-600">{lead.highestQualification || 'Not specified'}</td>
+              <td class="py-3 px-4 text-slate-600">{lead.targetDegree || 'Master\'s'}</td>
+              <td class="py-3 px-4">
+                <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-semibold text-[10px]">
+                  {lead.source}
+                </span>
+              </td>
+              <td class="py-3 px-4">
+                <span class={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase ${
+                  lead.status === 'new' ? 'bg-amber-100 text-amber-800 border border-amber-200' :
+                  lead.status === 'converted' ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' :
+                  lead.status === 'in_progress' ? 'bg-blue-100 text-blue-800 border border-blue-200' :
+                  'bg-slate-100 text-slate-700'
+                }`}>
+                  {lead.status}
+                </span>
+              </td>
+              <td class="py-3 px-4 text-right">
+                <a href={`/admin/leads?id=${lead.id}`} class="text-xs font-bold text-[#C8102E] hover:underline">
+                  Manage Lead →
+                </a>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</AdminLayout>

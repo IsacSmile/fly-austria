@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import UniversityCard from '../components/UniversityCard.astro';
+import { db, universities } from '../db';
+
+const universityList = await db.select().from(universities);
+---
+
+<BaseLayout
+  title="Austrian Public Universities Directory | FlyAustria Kochi"
+  description="Explore top public universities in Austria (University of Vienna, TU Graz, TU Wien, JKU Linz, Innsbruck) offering English Master's degrees at €726/sem."
+>
+  <PageHero
+    badgeText="AUSTRIA PUBLIC UNIVERSITIES DIRECTORY"
+    titlePrefix="Study at Top-Ranked"
+    titleHighlight="Austrian Universities"
+    titleSuffix="for €726/Semester!"
+    subtitle="World-class research institutes in Vienna, Graz, Linz, and Innsbruck offering English-taught Master's degrees."
+    description="Enjoy European higher education without massive student debt. Non-EU tuition is fixed at just €726.72 per semester (~₹70,000 INR) across all public universities."
+    primaryCtaText="BOOK FREE CONSULTATION"
+    primaryCtaLink="/#contact-section"
+    secondaryCtaText="INSTAGRAM"
+    secondaryCtaLink="https://instagram.com"
+    highlightsTitle="UNIVERSITY HIGHLIGHTS"
+    highlightsBadge="€726 TUITION"
+    highlights={[
+      { icon: "🏛️", title: "Uni Vienna", subtitle: "QS #137 Global Rank" },
+      { icon: "🔬", title: "TU Graz / Wien", subtitle: "Top Tech & Engineering" },
+      { icon: "💶", title: "Fixed Fees", subtitle: "€726.72 per Semester" },
+      { icon: "🇬🇧", title: "English Taught", subtitle: "100+ Master Programs" }
+    ]}
+  />
+
+  <section class="py-16 bg-[#FAF9F6]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Key Facts Bar -->
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-12 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+        <div>
+          <span class="block text-2xs uppercase tracking-wider text-slate-400 font-bold">Standard Non-EU Tuition</span>
+          <span class="text-2xl font-black text-slate-900">€726.72 / Semester</span>
+        </div>
+        <div>
+          <span class="block text-2xs uppercase tracking-wider text-slate-400 font-bold">Language of Instruction</span>
+          <span class="text-2xl font-black text-[#C8102E]">English Taught</span>
+        </div>
+        <div>
+          <span class="block text-2xs uppercase tracking-wider text-slate-400 font-bold">Major Intakes</span>
+          <span class="text-2xl font-black text-slate-900">October & March</span>
+        </div>
+      </div>
+
+      <!-- University Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {universityList.map((univ) => (
+          <UniversityCard
+            name={univ.name}
+            germanName={univ.germanName}
+            city={univ.city}
+            tuitionFee={univ.tuitionFee}
+            ranking={univ.ranking}
+            popularCourses={univ.popularCourses}
+            websiteUrl={univ.websiteUrl}
+            description={univ.description}
+          />
+        ))}
+      </div>
+
+    </div>
+  </section>
+</BaseLayout>
