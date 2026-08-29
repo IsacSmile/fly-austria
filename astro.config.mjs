@@ -7,6 +7,9 @@ import vercel from '@astrojs/vercel';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://flyaustria.in',
+  security: {
+    checkOrigin: false,
+  },
   output: 'static',
   adapter: vercel(),
   integrations: [
